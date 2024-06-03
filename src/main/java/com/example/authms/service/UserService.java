@@ -6,9 +6,15 @@ import com.example.authms.entity.User;
 import com.example.authms.exception.UserNotFoundException;
 import com.example.authms.mapper.UserMapper;
 import com.example.authms.repository.UserRepository;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,6 +24,12 @@ import java.util.List;
 public class UserService {
     private UserRepository userRepository;
     private UserMapper userMapper;
+    private JWTService jwtService;
+
+    @Autowired
+    public void setJwtService(JWTService jwtService) {
+        this.jwtService = jwtService;
+    }
 
     @Autowired
     public void setUserRepository(UserRepository userRepository) {
@@ -44,11 +56,11 @@ public class UserService {
 
     }
 
-    public UserResponseDto getUserById(Long userId) {
-        User userEntity = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("istifadəçi tapılmadı"));
-        return userMapper.mapToUserDto(userEntity);
-
+    public UserResponseDto getUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User user = userRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        return userMapper.mapToUserDto(user);
     }
 
     public UserRequestDto updateUser(Long userId, UserRequestDto userRequestDto) {
@@ -67,4 +79,6 @@ public class UserService {
                 .orElseThrow(() -> new UserNotFoundException("istifadəçi tapılmadı"));
         userRepository.delete(userEntity);
     }
+
+
 }

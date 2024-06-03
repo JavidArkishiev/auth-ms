@@ -26,11 +26,12 @@ public class UserController {
         return userService.getAllUser();
     }
 
+
     @GetMapping("get-user")
     @PreAuthorize("hasAuthority('USER')")
     @ResponseStatus(HttpStatus.OK)
-    public UserResponseDto getUserById(@RequestParam Long userId) {
-        return userService.getUserById(userId);
+    public UserResponseDto getUser() {
+        return userService.getUser();
     }
 
     @PutMapping()
