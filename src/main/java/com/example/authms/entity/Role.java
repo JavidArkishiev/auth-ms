@@ -9,6 +9,7 @@ import org.hibernate.annotations.NaturalId;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Data
 @AllArgsConstructor
@@ -29,7 +30,7 @@ public class Role {
 
     public void removeAllUsersFromRole() {
         if (this.getUsers() != null) {
-            List<User> usersInRole = this.getUsers().stream().toList();
+            List<User> usersInRole = this.getUsers().stream().collect(Collectors.toList());
             usersInRole.forEach(this::removeUserFromRole);
         }
     }
