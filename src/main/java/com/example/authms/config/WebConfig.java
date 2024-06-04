@@ -16,7 +16,7 @@ public class WebConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("https://auth-ms-063ea69d984c.herokuapp.com/")
+                        .allowedOrigins("https://auth-ms-063ea69d984c.herokuapp.com")
                         .allowedMethods(HttpMethod.GET.name(),
                                 HttpMethod.POST.name(),
                                 HttpMethod.DELETE.name(),
