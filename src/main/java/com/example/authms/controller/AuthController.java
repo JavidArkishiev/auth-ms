@@ -17,7 +17,6 @@ import java.security.Principal;
 @RequestMapping("auth")
 public class AuthController {
     private final AuthService authService;
-
     @CrossOrigin(origins = "https://auth-ms-99dc7b517339.herokuapp.com")
     @PostMapping("user-signUp")
     @ResponseStatus(HttpStatus.CREATED)
