@@ -15,7 +15,7 @@ import java.security.Principal;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("auth")
-@CrossOrigin(origins = "https://auth-ms-99dc7b517339.herokuapp.com")
+@CrossOrigin(origins = "https://auth-ms-99dc7b517339.herokuapp.com/**")
 public class AuthController {
     private final AuthService authService;
 
