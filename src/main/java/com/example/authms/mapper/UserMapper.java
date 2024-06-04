@@ -23,7 +23,6 @@ public abstract class UserMapper {
     protected PasswordEncoder passwordEncoder;
 
 
-    @Mapping(target = "resetPassword", constant = "false")
     @Mapping(target = "otp", expression = "java(generateRandomOtp())")
     @Mapping(target = "enabled", constant = "false")
     @Mapping(target = "password", expression = "java(passwordEncoder.encode(signUpRequest.getPassword()))")
@@ -54,6 +53,5 @@ public abstract class UserMapper {
     @Mapping(target = "enabled", ignore = true)
     @Mapping(target = "otp", ignore = true)
     @Mapping(target = "userId", ignore = true)
-    @Mapping(target = "resetPassword", ignore = true)
     public abstract User mapToUpdateUser(@MappingTarget User oldUser, UserRequestDto userRequestDto);
 }

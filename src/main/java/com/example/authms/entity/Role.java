@@ -30,7 +30,7 @@ public class Role {
 
     public void removeAllUsersFromRole() {
         if (this.getUsers() != null) {
-            List<User> usersInRole = this.getUsers().stream().collect(Collectors.toList());
+            List<User> usersInRole = this.getUsers().stream().toList();
             usersInRole.forEach(this::removeUserFromRole);
         }
     }
