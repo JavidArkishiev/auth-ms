@@ -50,7 +50,7 @@ public class AuthService {
                 .orElseThrow(() -> new UserNotFoundException("e-mail və ya şifrə yanlışdır"));
 
         if (!user.isEnabled()) {
-            regenerateOtp(user.getUserId());
+            regenerateOtp(user.getEmail());
             throw new UserNotFoundException("Sizin hesabınız aktiv deyil." +
                     "Zəhmət olmasa əvvəlcə hesabınızı aktiv edin." +
                     "Təsdiqləmə kodu sizin e-mail ünvanınıza göndərildi");
@@ -93,9 +93,9 @@ public class AuthService {
 
     }
 
-    public void regenerateOtp(Long userId) throws MessagingException {
+    public void regenerateOtp(String email) throws MessagingException {
         String otp = userMapper.generateRandomOtp();
-        User user = userRepository.findById(userId)
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("istifadəçi tapılmadı"));
         user.setOtp(otp);
         user.setOtpGeneratedTime(LocalDateTime.now());
@@ -108,22 +108,21 @@ public class AuthService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("istifadəçi tapılmadı"));
 
-        regenerateOtp(user.getUserId());
+        regenerateOtp(user.getEmail());
         userRepository.save(user);
 
     }
 
-    public void resetPassword(ResetPasswordRequest resetPasswordRequest, Long userId) {
+    public void resetPassword(ResetPasswordRequest resetPasswordRequest) {
+        User user = userRepository.findByOtp(resetPasswordRequest.getOtp())
+                .orElseThrow(() -> new UserNotFoundException("User not fond"));
+        if (!user.getOtp().equals(resetPasswordRequest.getOtp())) {
+            throw new UserNotFoundException("otp is not equals");
+        }
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("istifadəçi tapılmadı"));
         if (!resetPasswordRequest.getNewPassword().matches(resetPasswordRequest.getConfirmNewPassword())) {
             throw new UserNotFoundException("hər iki şifrə eyni olmalıdır");
         }
-        if (!user.isResetPassword()) {
-            throw new UserNotFoundException("Please first of all verify otp");
-        }
-
         user.setPassword(passwordEncoder.encode(resetPasswordRequest.getNewPassword()));
         userRepository.save(user);
 
@@ -142,20 +141,5 @@ public class AuthService {
 
     }
 
-
-    public void verifyOtp(String otp, Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("istifadəçi tapılmadı"));
-        if (!otp.equals(user.getOtp())) {
-            throw new UserNotFoundException("kod yanlışdır");
-
-        }
-        if (Duration.between(user.getOtpGeneratedTime()
-                        , LocalDateTime.now()).
-                getSeconds() < 5 * 60) {
-            user.setResetPassword(true);
-            userRepository.save(user);
-        }
-    }
 }
 

@@ -40,9 +40,6 @@ public class User implements UserDetails {
     @Column(name = "otp", nullable = false,unique = true)
     private String otp;
 
-    @Column(name = "reset_password", nullable = false)
-    private boolean isResetPassword;
-
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "user_roles",

@@ -41,8 +41,8 @@ public class AuthController {
     }
 
     @PostMapping("resend-otp")
-    public ResponseEntity<String> resetOtp(@RequestParam Long userId) throws MessagingException {
-        authService.regenerateOtp(userId);
+    public ResponseEntity<String> resetOtp(@RequestParam String email) throws MessagingException {
+        authService.regenerateOtp(email);
         return ResponseEntity.ok("OTP code sent to email address");
     }
 
@@ -54,19 +54,10 @@ public class AuthController {
     }
 
     @PostMapping("reset-password")
-    public ResponseEntity<String> resetPassword(@RequestBody @Valid ResetPasswordRequest resetPasswordRequest,
-                                                @RequestParam Long userId) {
-        authService.resetPassword(resetPasswordRequest, userId);
+    public ResponseEntity<String> resetPassword(@RequestBody @Valid ResetPasswordRequest resetPasswordRequest) {
+        authService.resetPassword(resetPasswordRequest);
         return ResponseEntity.ok("Password has been reset successfully." +
                 " You can login a website with new password");
-    }
-
-    @PostMapping("verify-otp")
-    public ResponseEntity<String> verifyOtp(@RequestParam String otp,
-                                            @RequestParam Long userId) {
-        authService.verifyOtp(otp, userId);
-        return ResponseEntity.ok("Success." +
-                " You can reset password");
     }
 
     @PutMapping("change-password")
