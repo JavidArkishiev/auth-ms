@@ -48,6 +48,7 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .securityMatcher("/auth/**")
                 .cors((cors) -> cors
                         .configurationSource(corsConfigurationSource())
                 )
