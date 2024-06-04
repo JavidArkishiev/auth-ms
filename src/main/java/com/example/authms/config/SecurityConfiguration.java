@@ -48,7 +48,6 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .securityMatcher("/auth/**")
                 .cors((cors) -> cors
                         .configurationSource(corsConfigurationSource())
                 )
@@ -85,7 +84,6 @@ public class SecurityConfiguration {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of("https://auth-ms-99dc7b517339.herokuapp.com"));
