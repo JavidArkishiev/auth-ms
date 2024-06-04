@@ -91,7 +91,7 @@ public class SecurityConfiguration {
 
     public CorsFilter corsFilter() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.setAllowedOrigins(List.of("https://auth-ms-99dc7b517339.herokuapp.com/"));
+        corsConfiguration.setAllowedOrigins(List.of("https://auth-ms-99dc7b517339.herokuapp.com"));
         corsConfiguration.setAllowedMethods(Arrays.asList("GET", "POST", "DELETE", "PUT"));
         corsConfiguration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
         corsConfiguration.setAllowCredentials(true);
