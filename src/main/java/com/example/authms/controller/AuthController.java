@@ -18,6 +18,7 @@ import java.security.Principal;
 public class AuthController {
     private final AuthService authService;
     @PostMapping("user-signUp")
+    @CrossOrigin
     @ResponseStatus(HttpStatus.CREATED)
     public String userSignUp(@RequestBody @Valid SignUpRequest signUpRequest) throws ExistEmailException, MessagingException {
         authService.userSignUp(signUpRequest);
