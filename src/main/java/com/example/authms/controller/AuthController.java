@@ -33,8 +33,8 @@ public class AuthController {
 
 
     @PostMapping("verify-account")
-    public ResponseEntity<String> verifyUser(@RequestParam String otp, Long userId) {
-        authService.verifyAccount(otp, userId);
+    public ResponseEntity<String> verifyUser(@RequestParam String otp) {
+        authService.verifyAccount(otp);
         return ResponseEntity.ok("Success.Your account has activated." +
                 " You can login a website");
 

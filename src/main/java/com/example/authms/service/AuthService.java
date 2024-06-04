@@ -73,9 +73,9 @@ public class AuthService {
         emailService.sendEmail(email, subject, body);
     }
 
-    public void verifyAccount(String otp, Long userId) {
+    public void verifyAccount(String otp) {
 
-        User user = userRepository.findById(userId)
+        User user = userRepository.findByOtp(otp)
                 .orElseThrow(() -> new UserNotFoundException("istifadəçi tapılmadı"));
 
         if (!otp.equals(user.getOtp())) {

@@ -37,7 +37,7 @@ public class User implements UserDetails {
     @Column(name = "enabled", nullable = false)
     private boolean enabled;
 
-    @Column(name = "otp", nullable = false)
+    @Column(name = "otp", nullable = false,unique = true)
     private String otp;
 
     @Column(name = "reset_password", nullable = false)
