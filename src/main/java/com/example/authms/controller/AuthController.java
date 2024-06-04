@@ -15,10 +15,10 @@ import java.security.Principal;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("auth")
-@CrossOrigin(origins = "https://auth-ms-99dc7b517339.herokuapp.com/**")
 public class AuthController {
     private final AuthService authService;
 
+    @CrossOrigin(origins = "https://auth-ms-99dc7b517339.herokuapp.com")
     @PostMapping("user-signUp")
     @ResponseStatus(HttpStatus.CREATED)
     public String userSignUp(@RequestBody @Valid SignUpRequest signUpRequest) throws ExistEmailException, MessagingException {
