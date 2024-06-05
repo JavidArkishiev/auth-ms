@@ -17,6 +17,7 @@ import java.security.Principal;
 @RequestMapping("auth")
 public class AuthController {
     private final AuthService authService;
+
     @PostMapping("user-signUp")
     @ResponseStatus(HttpStatus.CREATED)
     public String userSignUp(@RequestBody @Valid SignUpRequest signUpRequest) throws ExistEmailException, MessagingException {
@@ -65,5 +66,10 @@ public class AuthController {
         authService.changePassword(principal, request);
         return ResponseEntity.ok("Success");
 
+    }
+
+    @GetMapping("test-api")
+    public String get() {
+        return "Bu bir Test API dir ";
     }
 }
