@@ -1,4 +1,4 @@
-package com.example.authms.dto;
+package com.example.authms.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 public class ResetPasswordRequest {
 
-    private String otp;
+    String otp;
     @NotBlank(message = "şifrə boş ola bilməz")
     @Size(min = 6, message = "şifrə ən azı 6 simvoldan ibarət olmalıdır")
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$",
@@ -16,9 +16,9 @@ public class ResetPasswordRequest {
     private String newPassword;
 
     @NotBlank(message = "şifrə boş ola bilməz")
-    @Size(min = 6, message = "şifrə ən azı 6 simvoldan ibarət olmalıdır")
-    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$",
-            message = "şifrədə ən az bir böyük latın hərfi,bir kiçik latın hərfi və rəqəm istifadə olunmalıdır")
+//    @Size(min = 6, message = "şifrə ən azı 6 simvoldan ibarət olmalıdır")
+//    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$",
+//            message = "şifrədə ən az bir böyük latın hərfi,bir kiçik latın hərfi və rəqəm istifadə olunmalıdır")
     private String confirmNewPassword;
 
 }

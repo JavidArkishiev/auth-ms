@@ -1,6 +1,6 @@
 package com.example.authms.service;
 
-import com.example.authms.dto.RoleRequestDto;
+import com.example.authms.dto.request.RoleRequestDto;
 import com.example.authms.entity.Role;
 import com.example.authms.entity.User;
 import com.example.authms.exception.UserNotFoundException;

@@ -1,12 +1,9 @@
 package com.example.authms.controller;
 
-import com.example.authms.dto.UserRequestDto;
-import com.example.authms.dto.UserResponseDto;
-import com.example.authms.entity.User;
+import com.example.authms.dto.request.UserRequestDto;
+import com.example.authms.dto.response.UserResponseDto;
 import com.example.authms.service.UserService;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;

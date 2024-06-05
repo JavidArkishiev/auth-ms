@@ -1,8 +1,8 @@
 package com.example.authms.mapper;
 
-import com.example.authms.dto.SignUpRequest;
-import com.example.authms.dto.UserRequestDto;
-import com.example.authms.dto.UserResponseDto;
+import com.example.authms.dto.request.SignUpRequest;
+import com.example.authms.dto.request.UserRequestDto;
+import com.example.authms.dto.response.UserResponseDto;
 import com.example.authms.entity.Role;
 import com.example.authms.entity.User;
 import org.mapstruct.Mapper;

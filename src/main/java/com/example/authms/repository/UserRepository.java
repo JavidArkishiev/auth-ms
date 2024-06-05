@@ -1,5 +1,6 @@
 package com.example.authms.repository;
 
+import com.example.authms.dto.request.OtpDto;
 import com.example.authms.entity.Role;
 import com.example.authms.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;

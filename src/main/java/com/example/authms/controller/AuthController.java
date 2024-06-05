@@ -1,6 +1,7 @@
 package com.example.authms.controller;
 
-import com.example.authms.dto.*;
+import com.example.authms.dto.request.*;
+import com.example.authms.dto.response.AuthResponse;
 import com.example.authms.exception.ExistEmailException;
 import com.example.authms.service.AuthService;
 import jakarta.mail.MessagingException;
@@ -18,7 +19,7 @@ import java.security.Principal;
 public class AuthController {
     private final AuthService authService;
 
-    @PostMapping("user-signUp")
+    @PostMapping("user-signup")
     @ResponseStatus(HttpStatus.CREATED)
     public String userSignUp(@RequestBody @Valid SignUpRequest signUpRequest) throws ExistEmailException, MessagingException {
         authService.userSignUp(signUpRequest);
@@ -33,7 +34,7 @@ public class AuthController {
 
 
     @PostMapping("verify-account")
-    public ResponseEntity<String> verifyUser(@RequestParam String otp) {
+    public ResponseEntity<String> verifyUser(@RequestBody @Valid OtpDto otp) {
         authService.verifyAccount(otp);
         return ResponseEntity.ok("Success.Your account has activated." +
                 " You can login a website");

@@ -1,16 +1,13 @@
 package com.example.authms.service;
 
-import com.example.authms.dto.UserRequestDto;
-import com.example.authms.dto.UserResponseDto;
+import com.example.authms.dto.request.UserRequestDto;
+import com.example.authms.dto.response.UserResponseDto;
 import com.example.authms.entity.User;
 import com.example.authms.exception.UserNotFoundException;
 import com.example.authms.mapper.UserMapper;
 import com.example.authms.repository.UserRepository;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;

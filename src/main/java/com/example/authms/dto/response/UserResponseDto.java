@@ -1,4 +1,4 @@
-package com.example.authms.dto;
+package com.example.authms.dto.response;
 
 import jakarta.persistence.Column;
 import lombok.Data;

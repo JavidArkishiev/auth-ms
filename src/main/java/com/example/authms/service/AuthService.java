@@ -1,6 +1,7 @@
 package com.example.authms.service;
 
-import com.example.authms.dto.*;
+import com.example.authms.dto.request.*;
+import com.example.authms.dto.response.AuthResponse;
 import com.example.authms.entity.User;
 import com.example.authms.exception.ExistEmailException;
 import com.example.authms.exception.UserNotFoundException;
@@ -73,9 +74,9 @@ public class AuthService {
         emailService.sendEmail(email, subject, body);
     }
 
-    public void verifyAccount(String otp) {
+    public void verifyAccount(OtpDto otpDto) {
 
-        User user = userRepository.findByOtp(otp)
+        User user = userRepository.findByOtp(otpDto.getOtp())
                 .orElseThrow(() -> new UserNotFoundException("istifadəçi tapılmadı və ya kod yanlışdır"));
 
         if (Duration.between(user.getOtpGeneratedTime()

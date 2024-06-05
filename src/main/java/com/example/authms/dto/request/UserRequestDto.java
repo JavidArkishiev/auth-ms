@@ -1,4 +1,4 @@
-package com.example.authms.dto;
+package com.example.authms.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;

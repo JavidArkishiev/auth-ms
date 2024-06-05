@@ -1,33 +1,33 @@
-package com.example.authms.dto;
+package com.example.authms.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
-public class SignUpRequest {
-
-
-    @NotBlank(message = "email boş ola bilməz")
-    @Pattern(regexp = "^[\\w.-]+@[\\w.-]+\\.(com|ru)$", message = "email düzgün deyil")
-    private String email;
-
-    @NotBlank(message = "ad boş ola bilməz")
-    private String name;
-
-    @NotBlank(message = "soyad can not be null")
-    private String surname;
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class ChangePasswordRequest {
+    @NotBlank(message = "şifrə boş ola bilməz")
+    @Size(min = 6, message = "şifrə ən azı 6 simvoldan ibarət olmalıdır")
+    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$",
+            message = "şifrədə ən az bir böyük latın hərfi,bir kiçik latın hərfi və rəqəm istifadə olunmalıdır")
+    private String currentPassword;
 
     @NotBlank(message = "şifrə boş ola bilməz")
     @Size(min = 6, message = "şifrə ən azı 6 simvoldan ibarət olmalıdır")
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$",
             message = "şifrədə ən az bir böyük latın hərfi,bir kiçik latın hərfi və rəqəm istifadə olunmalıdır")
-    private String password;
+    private String newPassword;
 
     @NotBlank(message = "şifrə boş ola bilməz")
-    @Size(min = 6, message = "şifrə ən azı 6 simvoldan ibarət olmalıdır")
-    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$",
-            message = "şifrədə ən az bir böyük latın hərfi,bir kiçik latın hərfi və rəqəm istifadə olunmalıdır")
-    private String confirmPassword;
+//    @Size(min = 6, message = "şifrə ən azı 6 simvoldan ibarət olmalıdır")
+//    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$",
+//            message = "şifrədə ən az bir böyük latın hərfi,bir kiçik latın hərfi və rəqəm istifadə olunmalıdır")
+    private String confirmationPassword;
 }
