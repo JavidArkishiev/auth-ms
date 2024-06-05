@@ -21,8 +21,6 @@ import java.util.Random;
 public abstract class UserMapper {
     @Autowired
     protected PasswordEncoder passwordEncoder;
-
-
     @Mapping(target = "otp", expression = "java(generateRandomOtp())")
     @Mapping(target = "enabled", constant = "false")
     @Mapping(target = "password", expression = "java(passwordEncoder.encode(signUpRequest.getPassword()))")

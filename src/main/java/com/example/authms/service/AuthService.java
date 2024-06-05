@@ -32,7 +32,7 @@ public class AuthService {
 
     public void userSignUp(SignUpRequest signUpRequest) throws ExistEmailException, MessagingException {
         if (userRepository.existsByEmail(signUpRequest.getEmail())) {
-            throw new ExistEmailException("“Bu e-poçt ünvanı üzrə sistemdə istifadəçi mövcuddur");
+            throw new ExistEmailException("bu e-poçt ünvanı üzrə sistemdə istifadəçi mövcuddur");
         }
 
         if (!signUpRequest.getPassword().matches(signUpRequest.getConfirmPassword())) {
@@ -52,8 +52,8 @@ public class AuthService {
 
         if (!user.isEnabled()) {
             regenerateOtp(user.getEmail());
-            throw new UserNotFoundException("Sizin hesabınız aktiv deyil." +
-                    "Zəhmət olmasa əvvəlcə hesabınızı aktiv edin." +
+            throw new UserNotFoundException("Sizin hesabınız aktiv deyil. " +
+                    "Zəhmət olmasa əvvəlcə hesabınızı aktiv edin. " +
                     "Təsdiqləmə kodu sizin e-mail ünvanınıza göndərildi");
         }
         try {
@@ -78,6 +78,9 @@ public class AuthService {
 
         User user = userRepository.findByOtp(otpDto.getOtp())
                 .orElseThrow(() -> new UserNotFoundException("istifadəçi tapılmadı və ya kod yanlışdır"));
+        if (user.isEnabled()) {
+            throw new UserNotFoundException("bu istifadəçi artıq aktivdir");
+        }
 
         if (Duration.between(user.getOtpGeneratedTime()
                         , LocalDateTime.now()).
@@ -86,7 +89,8 @@ public class AuthService {
             userRepository.save(user);
 
         } else throw new
-                UserNotFoundException("opt time is over.please regenerateOtp");
+                UserNotFoundException("Otp kodun istifadə müddəti bitmişdir. " +
+                "Zəhmət olmasa yenidən otp kodu yenidən əldə edin");
 
     }
 
@@ -112,9 +116,13 @@ public class AuthService {
 
     public void resetPassword(ResetPasswordRequest resetPasswordRequest) {
         User user = userRepository.findByOtp(resetPasswordRequest.getOtp())
-                .orElseThrow(() -> new UserNotFoundException("User not fond"));
-        if (!user.getOtp().equals(resetPasswordRequest.getOtp())) {
-            throw new UserNotFoundException("otp is not equals");
+                .orElseThrow(() -> new UserNotFoundException("istifadəçi tapılmadı və ya kod yanlışdır"));
+
+        if (Duration.between(user.getOtpGeneratedTime()
+                        , LocalDateTime.now()).
+                getSeconds() > 3 * 60) {
+            throw new UserNotFoundException("Otp kodun istifadə müddəti bitmişdir. " +
+                    "Zəhmət olmasa yenidən otp kodu yenidən əldə edin");
         }
 
         if (!resetPasswordRequest.getNewPassword().matches(resetPasswordRequest.getConfirmNewPassword())) {
