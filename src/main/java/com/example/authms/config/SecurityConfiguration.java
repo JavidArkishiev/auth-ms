@@ -22,6 +22,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -81,24 +82,22 @@ public class SecurityConfiguration {
     }
 
 
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
+    CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-//        to do
+        // Todo: Bu hisse proda cixdiqdan sonra Mobile ve Admin panel ucun Url yazilacaq ki ancaq onlardan icaze olsun.
         configuration.setAllowedOrigins(Collections.singletonList("*"));
-        configuration.setAllowedMethods(List.of("GET", "HEAD", "OPTIONS", "POST", "PUT", "DELETE"));
-        configuration.setAllowedHeaders(List.of("Authorization", "x-xsrf-token", "Accept-language", "Access-Control-Allow-Headers",
-                "Origin", "Accept", "X-Requested-With", "userId",
-                "Content-Type", "Access-Control-Request-Method", "Access-Control-Request-Headers",
-                "Access-Control-Expose-Headers", "X-Session-Id", "X-Platform"));
-        configuration.setAllowCredentials(true);
+        configuration
+                .setAllowedMethods(Arrays.asList("GET", "PUT", "POST", "DELETE", "OPTIONS", "PATCH"));
         configuration.setMaxAge(3600L);
-
+        configuration.setAllowedHeaders(Arrays
+                .asList("Authorization", "x-xsrf-token", "Accept-language", "Access-Control-Allow-Headers",
+                        "Origin", "Accept", "X-Requested-With", "userId",
+                        "Content-Type", "Access-Control-Request-Method", "Access-Control-Request-Headers",
+                        "Access-Control-Expose-Headers", "X-Session-Id", "X-Platform"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
-
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
