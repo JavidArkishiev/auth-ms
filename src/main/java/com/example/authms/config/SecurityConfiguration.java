@@ -47,8 +47,7 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.cors((cors) -> cors
-                        .configurationSource(corsConfigurationSource()))
+        http.cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request ->
                         request.requestMatchers(
@@ -88,8 +87,8 @@ public class SecurityConfiguration {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of("https://auth-ms-99dc7b517339.herokuapp.com"));
         configuration.setAllowedMethods(List.of("GET", "HEAD", "OPTIONS", "POST", "PUT"));
-        configuration.setAllowedHeaders(List.of("Access-Control-Allow-Headers", "Origin", "Accept", "X-Requested-With", "Content-Type", "Access-Control-Request-Method", "Access-Control-Request-Headers"));
-        configuration.setExposedHeaders(List.of("Custom-Header1", "Custom-Header2"));
+        configuration.setAllowedHeaders(List.of("Authorization", "Access-Control-Allow-Headers", "Origin", "Accept", "X-Requested-With", "Content-Type", "Access-Control-Request-Method", "Access-Control-Request-Headers"));
+//        configuration.setExposedHeaders(List.of("Custom-Header1", "Custom-Header2"));
         configuration.setAllowCredentials(true);
         configuration.setMaxAge(2592000L);
 
