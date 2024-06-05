@@ -15,9 +15,8 @@ public class CorsConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        // Node.js CORS ayarlarını buraya ekleyelim
-        configuration.setAllowedOrigins(List.of("*")); // Herkese izin veriliyor
-        configuration.setAllowedMethods(List.of("GET", "HEAD", "OPTIONS", "POST", "PUT")); // Belirtilen metodlar
+        configuration.setAllowedOrigins(List.of("https://auth-ms-99dc7b517339.herokuapp.com"));
+        configuration.setAllowedMethods(List.of("GET", "HEAD", "OPTIONS", "POST", "PUT"));
         configuration.setAllowedHeaders(List.of("Access-Control-Allow-Headers", "Origin", "Accept", "X-Requested-With", "Content-Type", "Access-Control-Request-Method", "Access-Control-Request-Headers"));
         configuration.setExposedHeaders(List.of("Custom-Header1", "Custom-Header2")); // İsteğe bağlı, Node.js CORS'ta yok ama burada bırakılmış
         configuration.setAllowCredentials(true); // Kimlik bilgileri gönderimine izin ver
@@ -27,6 +26,7 @@ public class CorsConfig {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
+
     @Bean
     public CorsFilter corsFilter() {
         return new CorsFilter();
