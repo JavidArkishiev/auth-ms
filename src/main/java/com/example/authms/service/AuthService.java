@@ -76,12 +76,8 @@ public class AuthService {
     public void verifyAccount(String otp) {
 
         User user = userRepository.findByOtp(otp)
-                .orElseThrow(() -> new UserNotFoundException("istifadəçi tapılmadı"));
+                .orElseThrow(() -> new UserNotFoundException("istifadəçi tapılmadı və ya kod yanlışdır"));
 
-        if (!otp.equals(user.getOtp())) {
-            throw new UserNotFoundException("kod yanlışdır");
-
-        }
         if (Duration.between(user.getOtpGeneratedTime()
                         , LocalDateTime.now()).
                 getSeconds() < 5 * 60) {
