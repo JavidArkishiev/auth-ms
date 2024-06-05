@@ -15,7 +15,7 @@ public class CorsConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("https://auth-ms-99dc7b517339.herokuapp.com"));
+        configuration.setAllowedOrigins(List.of("https://auth-ms-99dc7b517339.herokuapp.com/auth/user-signUp"));
         configuration.setAllowedMethods(List.of("GET", "HEAD", "OPTIONS", "POST", "PUT"));
         configuration.setAllowedHeaders(List.of("Access-Control-Allow-Headers", "Origin", "Accept", "X-Requested-With", "Content-Type", "Access-Control-Request-Method", "Access-Control-Request-Headers"));
         configuration.setExposedHeaders(List.of("Custom-Header1", "Custom-Header2")); // İsteğe bağlı, Node.js CORS'ta yok ama burada bırakılmış
