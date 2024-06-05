@@ -22,6 +22,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.Collections;
 import java.util.List;
 
 @Configuration
@@ -84,11 +85,14 @@ public class SecurityConfiguration {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 //        to do
-        configuration.setAllowedOrigins(List.of("localhost:3000"));
+        configuration.setAllowedOrigins(Collections.singletonList("*"));
         configuration.setAllowedMethods(List.of("GET", "HEAD", "OPTIONS", "POST", "PUT", "DELETE"));
-        configuration.setAllowedHeaders(List.of("Authorization", "Access-Control-Allow-Headers", "Origin", "Accept", "X-Requested-With", "Content-Type", "Access-Control-Request-Method", "Access-Control-Request-Headers"));
+        configuration.setAllowedHeaders(List.of("Authorization", "x-xsrf-token", "Accept-language", "Access-Control-Allow-Headers",
+                "Origin", "Accept", "X-Requested-With", "userId",
+                "Content-Type", "Access-Control-Request-Method", "Access-Control-Request-Headers",
+                "Access-Control-Expose-Headers", "X-Session-Id", "X-Platform"));
         configuration.setAllowCredentials(true);
-        configuration.setMaxAge(2592000L);
+        configuration.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
