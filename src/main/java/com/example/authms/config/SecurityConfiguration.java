@@ -84,7 +84,6 @@ public class SecurityConfiguration {
 
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        // Todo: Bu hisse proda cixdiqdan sonra Mobile ve Admin panel ucun Url yazilacaq ki ancaq onlardan icaze olsun.
         configuration.setAllowedOrigins(Collections.singletonList("*"));
         configuration
                 .setAllowedMethods(Arrays.asList("GET", "PUT", "POST", "DELETE", "OPTIONS", "PATCH"));
