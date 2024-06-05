@@ -83,22 +83,24 @@ public class SecurityConfiguration {
     }
 
 
+    //    @Bean
+//    CorsConfigurationSource corsConfigurationSource() {
+//        CorsConfiguration configuration = new CorsConfiguration();
+//        configuration.setAllowedOrigins(List.of("https://auth-ms-99dc7b517339.herokuapp.com/"));
+//        configuration.setAllowedMethods(List.of("GET", "HEAD", "OPTIONS", "POST", "PUT"));
+//        configuration.setAllowedHeaders(List.of("Access-Control-Allow-Headers", "Origin", "Accept", "X-Requested-With", "Content-Type", "Access-Control-Request-Method", "Access-Control-Request-Headers"));
+//        configuration.setExposedHeaders(List.of("Custom-Header1", "Custom-Header2"));
+//        configuration.setAllowCredentials(true);
+//        configuration.setMaxAge(2592000L);
+//
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        source.registerCorsConfiguration("/**", configuration);
+//        return source;
+//    }
     @Bean
-    CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        // Node.js CORS ayarlarını buraya ekleyelim
-        configuration.setAllowedOrigins(List.of("*")); // Herkese izin veriliyor
-        configuration.setAllowedMethods(List.of("GET", "HEAD", "OPTIONS", "POST", "PUT")); // Belirtilen metodlar
-        configuration.setAllowedHeaders(List.of("Access-Control-Allow-Headers", "Origin", "Accept", "X-Requested-With", "Content-Type", "Access-Control-Request-Method", "Access-Control-Request-Headers"));
-        configuration.setExposedHeaders(List.of("Custom-Header1", "Custom-Header2")); // İsteğe bağlı, Node.js CORS'ta yok ama burada bırakılmış
-        configuration.setAllowCredentials(true); // Kimlik bilgileri gönderimine izin ver
-        configuration.setMaxAge(2592000L); // 30 gün
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
+    public CorsConfigurationSource corsConfigurationSource() {
+        return new CorsConfig().corsConfigurationSource();
     }
-//    'Access-Control-Allow-Headers': "Access-Control-Allow-Headers, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers",
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
