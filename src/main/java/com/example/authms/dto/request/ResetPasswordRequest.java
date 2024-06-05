@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 public class ResetPasswordRequest {
 
-    String otp;
+    private String otp;
     @NotBlank(message = "şifrə boş ola bilməz")
     @Size(min = 6, message = "şifrə ən azı 6 simvoldan ibarət olmalıdır")
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$",
