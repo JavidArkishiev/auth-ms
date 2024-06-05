@@ -37,16 +37,16 @@ public class UserController {
     @PutMapping()
     @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
     @ResponseStatus(HttpStatus.OK)
-    public UserRequestDto updateUser(@RequestParam Long userId, @RequestBody UserRequestDto userRequestDto) {
-        return userService.updateUser(userId, userRequestDto);
+    public UserRequestDto updateUser(@RequestBody UserRequestDto userRequestDto) {
+        return userService.updateUser(userRequestDto);
 
     }
 
     @DeleteMapping()
     @PreAuthorize("hasAuthority('USER')")
     @ResponseStatus(HttpStatus.OK)
-    public String deleteUserById(@RequestParam Long userId) {
-        userService.deleteUserById(userId);
+    public String deleteUserById() {
+        userService.deleteUser();
         return "your account has been deleted";
     }
 }

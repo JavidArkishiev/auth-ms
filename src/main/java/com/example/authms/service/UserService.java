@@ -59,13 +59,14 @@ public class UserService {
     public UserResponseDto getUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
-        User user = userRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        User user = userRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("istifadəçi tapılmadı"));
         return userMapper.mapToUserDto(user);
     }
 
-    public UserRequestDto updateUser(Long userId, UserRequestDto userRequestDto) {
-        User oldUser = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("istifadəçi tapılmadı"));
+    public UserRequestDto updateUser(UserRequestDto userRequestDto) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User oldUser = userRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("istifadəçi tapılmadı"));
         if (oldUser != null) {
             User updateUser = userMapper.mapToUpdateUser(oldUser, userRequestDto);
             userRepository.save(updateUser);
@@ -74,9 +75,10 @@ public class UserService {
 
     }
 
-    public void deleteUserById(Long userId) {
-        User userEntity = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("istifadəçi tapılmadı"));
+    public void deleteUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User userEntity = userRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("istifadəçi tapılmadı"));
         userRepository.delete(userEntity);
     }
 

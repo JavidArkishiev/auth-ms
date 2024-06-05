@@ -47,6 +47,7 @@ public abstract class UserMapper {
 
     public abstract UserResponseDto mapToUserDto(User userEntity);
 
+    @Mapping(target = "email", ignore = true)
     @Mapping(target = "password", ignore = true)
     @Mapping(target = "creationDate", ignore = true)
     @Mapping(target = "otpGeneratedTime", ignore = true)
