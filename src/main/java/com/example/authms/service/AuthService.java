@@ -81,7 +81,7 @@ public class AuthService {
 
         if (Duration.between(user.getOtpGeneratedTime()
                         , LocalDateTime.now()).
-                getSeconds() < 5 * 60) {
+                getSeconds() < 3 * 60) {
             user.setEnabled(true);
             userRepository.save(user);
 
