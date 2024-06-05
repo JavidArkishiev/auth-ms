@@ -25,6 +25,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private JWTService jwtService;
     private UserService userService;
 
+
     @Autowired
     public void setJwtService(JWTService jwtService) {
         this.jwtService = jwtService;
@@ -43,9 +44,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String jwt;
         final String userEmail;
 
-        response.setHeader("Access-Control-Allow-Origin", "*");
-        response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-        response.setHeader("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, Authorization");
+
+        response.setHeader("Access-Control-Allow-Origin", "https://auth-ms-99dc7b517339.herokuapp.com");
+        response.setHeader("Access-Control-Allow-Methods", "GET, HEAD, OPTIONS, POST, PUT");
+        response.setHeader("Access-Control-Allow-Headers", "Authorization, Access-Control-Allow-Headers, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
+        response.setHeader("Access-Control-Expose-Headers", "Custom-Header1, Custom-Header2");
+        response.setHeader("Access-Control-Allow-Credentials", "true");
+
 
         if (StringUtils.isEmpty(authHeader) || !StringUtils.startsWith(authHeader, "Bearer")) {
             filterChain.doFilter(request, response);
