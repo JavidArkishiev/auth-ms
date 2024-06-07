@@ -44,6 +44,6 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     public String deleteUserById() {
         userService.deleteUser();
-        return "your account has been deleted";
+        return "Hesabınız uğurla silindi";
     }
 }

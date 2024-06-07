@@ -37,7 +37,7 @@ public class User implements UserDetails {
     @Column(name = "enabled", nullable = false)
     private boolean enabled;
 
-    @Column(name = "otp", nullable = false,unique = true)
+    @Column(name = "otp", nullable = false, unique = true)
     private String otp;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
@@ -57,6 +57,15 @@ public class User implements UserDetails {
     @Column(name = "password", nullable = false)
     private String password;
 
+    @Column(name = "failed_attempt", nullable = false)
+    private int failedAttempt;
+
+    @Column(name = "lock_time")
+    private LocalDateTime lockTime;
+
+    @Column(name = "account_non_locked", nullable = false)
+    private boolean accountNonLocked = true;
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -75,10 +84,6 @@ public class User implements UserDetails {
         return true;
     }
 
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
 
     @Override
     public boolean isCredentialsNonExpired() {
