@@ -5,6 +5,9 @@ import com.example.authms.dto.request.UserRequestDto;
 import com.example.authms.dto.response.UserResponseDto;
 import com.example.authms.entity.Role;
 import com.example.authms.entity.User;
+import com.example.authms.exception.AllException;
+import com.example.authms.repository.RoleRepository;
+import lombok.RequiredArgsConstructor;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -21,6 +24,9 @@ import java.util.Random;
 public abstract class UserMapper {
     @Autowired
     protected PasswordEncoder passwordEncoder;
+    @Autowired
+    protected RoleRepository roleRepository;
+
     @Mapping(target = "otp", expression = "java(generateRandomOtp())")
     @Mapping(target = "enabled", constant = "false")
     @Mapping(target = "password", expression = "java(passwordEncoder.encode(signUpRequest.getPassword()))")
@@ -28,9 +34,9 @@ public abstract class UserMapper {
     public abstract User mapToEntity(SignUpRequest signUpRequest);
 
     public List<Role> mapRole() {
+        Role role = roleRepository.findByName("USER")
+                .orElseThrow(() -> new AllException("USER rolu tapılmadı"));
         List<Role> roles = new ArrayList<>();
-        Role role = new Role();
-        role.setName("USER");
         roles.add(role);
         return roles;
     }

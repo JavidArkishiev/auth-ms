@@ -40,14 +40,6 @@ public class User implements UserDetails {
     @Column(name = "otp", nullable = false, unique = true)
     private String otp;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(
-            name = "user_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
-    private List<Role> roles;
-
     @Column(name = "otp_generated_time", nullable = false)
     private LocalDateTime otpGeneratedTime = LocalDateTime.now();
 
@@ -66,6 +58,13 @@ public class User implements UserDetails {
     @Column(name = "account_non_locked", nullable = false)
     private boolean accountNonLocked = true;
 
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+            name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private List<Role> roles;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

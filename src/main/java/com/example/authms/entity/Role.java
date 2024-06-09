@@ -20,7 +20,7 @@ public class Role {
     @Column(name = "role_id", nullable = false)
     private int roleId;
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "name", nullable = false, unique = true)
     private String name;
     @JsonIgnore
     @ManyToMany(mappedBy = "roles")

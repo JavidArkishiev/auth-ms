@@ -11,7 +11,7 @@ import lombok.Data;
 public class LoginRequest {
 
     @NotBlank(message = "email boş ola bilməz")
-    @Pattern(regexp = "^[\\w.-]+@[\\w.-]+\\.(com|ru)$", message = "email düzgün deyil")
+    @Pattern(regexp = "^[\\w._%+-]+@[\\w.-]+\\.[a-zA-Z]{2,6}$", message = "email düzgün deyil")
     private String email;
 
     @NotBlank(message = "şifrə boş ola bilməz")

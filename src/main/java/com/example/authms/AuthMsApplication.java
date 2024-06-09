@@ -65,9 +65,17 @@ public class AuthMsApplication implements CommandLineRunner {
 
     public List<Role> mapRole() {
         List<Role> roles = new ArrayList<>();
-        Role role = new Role();
-        role.setName("ADMIN");
-        roles.add(role);
+
+        Role adminRole = new Role();
+        adminRole.setName("ADMIN");
+
+        Role userRole = new Role();
+        userRole.setName("USER");
+
+        roles.add(adminRole);
+        roles.add(userRole);
+
         return roles;
     }
+
 }
