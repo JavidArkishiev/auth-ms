@@ -4,7 +4,7 @@ import com.example.authms.dto.request.*;
 import com.example.authms.dto.response.AuthResponse;
 import com.example.authms.entity.User;
 import com.example.authms.exception.ExistEmailException;
-import com.example.authms.exception.UserNotFoundException;
+import com.example.authms.exception.AllException;
 import com.example.authms.mapper.UserMapper;
 import com.example.authms.repository.UserRepository;
 import jakarta.mail.MessagingException;
@@ -36,7 +36,7 @@ public class AuthService {
         }
 
         if (!signUpRequest.getPassword().matches(signUpRequest.getConfirmPassword())) {
-            throw new UserNotFoundException("hər iki şifrə eyni olmalıdır");
+            throw new AllException("hər iki şifrə eyni olmalıdır");
         }
 
         User userEntity = userMapper.mapToEntity(signUpRequest);
@@ -47,11 +47,11 @@ public class AuthService {
 
     public AuthResponse login(LoginRequest loginRequest) throws MessagingException {
         var user = userRepository.findByEmail(loginRequest.getEmail())
-                .orElseThrow(() -> new UserNotFoundException("e-mail və ya şifrə yanlışdır"));
+                .orElseThrow(() -> new AllException("e-mail və ya şifrə yanlışdır"));
 
         if (!user.isEnabled()) {
             regenerateOtp(user.getEmail());
-            throw new UserNotFoundException("Sizin hesabınız aktiv deyil. " +
+            throw new AllException("Sizin hesabınız aktiv deyil. " +
                     "Zəhmət olmasa əvvəlcə hesabınızı aktiv edin. " +
                     "Təsdiqləmə kodu sizin e-mail ünvanınıza göndərildi");
         }
@@ -59,7 +59,7 @@ public class AuthService {
         if (!user.isAccountNonLocked()) {
             if (unlock(user)) {
             } else {
-                throw new UserNotFoundException("Çox giriş cəhdi zəhmət olamasa biraz sonra yenidən cəhd edin");
+                throw new AllException("Çox giriş cəhdi zəhmət olamasa biraz sonra yenidən cəhd edin");
             }
         }
 
@@ -74,10 +74,10 @@ public class AuthService {
             increaseFailedAttempts(user);
             if (user.getFailedAttempt() >= 5) {
                 lock(user);
-                throw new UserNotFoundException("Çox giriş cəhdi zəhmət olamasa biraz sonra yenidən cəhd edin");
+                throw new AllException("Çox giriş cəhdi zəhmət olamasa biraz sonra yenidən cəhd edin");
             }
 
-            throw new UserNotFoundException("e-mail və ya şifrə yanlışdır");
+            throw new AllException("e-mail və ya şifrə yanlışdır");
         }
     }
 
@@ -97,9 +97,9 @@ public class AuthService {
     public void verifyAccount(OtpDto otpDto) {
 
         User user = userRepository.findByOtp(otpDto.getOtp())
-                .orElseThrow(() -> new UserNotFoundException("istifadəçi tapılmadı və ya kod yanlışdır"));
+                .orElseThrow(() -> new AllException("istifadəçi tapılmadı və ya kod yanlışdır"));
         if (user.isEnabled()) {
-            throw new UserNotFoundException("bu istifadəçi artıq aktivdir");
+            throw new AllException("bu istifadəçi artıq aktivdir");
         }
 
         if (Duration.between(user.getOtpGeneratedTime()
@@ -109,7 +109,7 @@ public class AuthService {
             userRepository.save(user);
 
         } else throw new
-                UserNotFoundException("Otp kodun istifadə müddəti bitmişdir. " +
+                AllException("Otp kodun istifadə müddəti bitmişdir. " +
                 "Zəhmət olmasa yenidən otp kodu yenidən əldə edin");
 
     }
@@ -117,7 +117,7 @@ public class AuthService {
     public void regenerateOtp(String email) throws MessagingException {
         String otp = userMapper.generateRandomOtp();
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserNotFoundException("istifadəçi tapılmadı"));
+                .orElseThrow(() -> new AllException("istifadəçi tapılmadı"));
         user.setOtp(otp);
         user.setOtpGeneratedTime(LocalDateTime.now());
         userRepository.save(user);
@@ -127,7 +127,7 @@ public class AuthService {
 
     public void forgetPassword(String email) throws MessagingException {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserNotFoundException("istifadəçi tapılmadı"));
+                .orElseThrow(() -> new AllException("istifadəçi tapılmadı"));
 
         regenerateOtp(user.getEmail());
         userRepository.save(user);
@@ -136,17 +136,17 @@ public class AuthService {
 
     public void resetPassword(ResetPasswordRequest resetPasswordRequest) {
         User user = userRepository.findByOtp(resetPasswordRequest.getOtp())
-                .orElseThrow(() -> new UserNotFoundException("istifadəçi tapılmadı və ya kod yanlışdır"));
+                .orElseThrow(() -> new AllException("istifadəçi tapılmadı və ya kod yanlışdır"));
 
         if (Duration.between(user.getOtpGeneratedTime()
                         , LocalDateTime.now()).
                 getSeconds() > 3 * 60) {
-            throw new UserNotFoundException("Otp kodun istifadə müddəti bitmişdir. " +
+            throw new AllException("Otp kodun istifadə müddəti bitmişdir. " +
                     "Zəhmət olmasa yenidən otp kodu yenidən əldə edin");
         }
 
         if (!resetPasswordRequest.getNewPassword().matches(resetPasswordRequest.getConfirmNewPassword())) {
-            throw new UserNotFoundException("hər iki şifrə eyni olmalıdır");
+            throw new AllException("hər iki şifrə eyni olmalıdır");
         }
         user.setPassword(passwordEncoder.encode(resetPasswordRequest.getNewPassword()));
         userRepository.save(user);
@@ -156,10 +156,10 @@ public class AuthService {
     public void changePassword(Principal principal, ChangePasswordRequest request) {
         var user = (User) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
         if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
-            throw new UserNotFoundException("cari şifrə doğru deyil");
+            throw new AllException("cari şifrə doğru deyil");
         }
         if (!request.getNewPassword().equals(request.getConfirmationPassword())) {
-            throw new UserNotFoundException("hər iki şifrə eyni olmalıdır");
+            throw new AllException("hər iki şifrə eyni olmalıdır");
         }
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         userRepository.save(user);

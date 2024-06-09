@@ -29,8 +29,8 @@ public class ExceptionHandle {
         errorDetails.setTimeStamp(LocalDateTime.now());
         return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
 
-    } @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<ErrorDetails> handleUserNotfoundException(UserNotFoundException e) {
+    } @ExceptionHandler(AllException.class)
+    public ResponseEntity<ErrorDetails> handleUserNotfoundException(AllException e) {
         ErrorDetails errorDetails = new ErrorDetails();
         errorDetails.setMessage(e.getMessage());
         errorDetails.setStatusCode(HttpStatus.NOT_FOUND.value());

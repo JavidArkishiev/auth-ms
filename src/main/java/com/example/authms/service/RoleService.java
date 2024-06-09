@@ -3,7 +3,7 @@ package com.example.authms.service;
 import com.example.authms.dto.request.RoleRequestDto;
 import com.example.authms.entity.Role;
 import com.example.authms.entity.User;
-import com.example.authms.exception.UserNotFoundException;
+import com.example.authms.exception.AllException;
 import com.example.authms.mapper.RoleMapper;
 import com.example.authms.repository.RoleRepository;
 import com.example.authms.repository.UserRepository;
@@ -28,7 +28,7 @@ public class RoleService {
     public RoleRequestDto createRole(RoleRequestDto role) {
         Optional<Role> checkRole = roleRepository.findByName(role.getName());
         if (checkRole.isPresent()) {
-            throw new UserNotFoundException(checkRole.get().getName() + " role already exist");
+            throw new AllException(checkRole.get().getName() + " role already exist");
         }
         Role roleEntity = roleMapper.mapToRoleEntity(role);
         roleRepository.save(roleEntity);
@@ -37,7 +37,7 @@ public class RoleService {
 
     public Role findById(Long roleId) {
         return roleRepository.findById(roleId)
-                .orElseThrow(() -> new UserNotFoundException("role not found"));
+                .orElseThrow(() -> new AllException("role not found"));
     }
 
     public void deleteRole(Long roleId) {
@@ -62,7 +62,7 @@ public class RoleService {
         Optional<User> user = userRepository.findById(userId);
         Optional<Role> role = roleRepository.findById(roleId);
         if (user.isPresent() && user.get().getRoles().contains(role.get())) {
-            throw new UserNotFoundException(
+            throw new AllException(
                     user.get().getName() + " is already assigned to the " + role.get().getName() + " role");
         }
         role.ifPresent(Role -> Role.assignUserToRole(user.get()));
@@ -79,7 +79,7 @@ public class RoleService {
             roleRepository.save(role.get());
             return user.get();
         }
-        throw new UserNotFoundException("User not found!");
+        throw new AllException("User not found!");
     }
 
     public List<Role> getAllRolesUser(String email) {
