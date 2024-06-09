@@ -82,8 +82,8 @@ public class RoleService {
         throw new UserNotFoundException("User not found!");
     }
 
-    public List<Role> getAllRolesUser(Long userId) {
-        return userRepository.findAllByUserId(userId);
+    public List<Role> getAllRolesUser(String email) {
+        return userRepository.findAllByUserId(email);
 
     }
 }

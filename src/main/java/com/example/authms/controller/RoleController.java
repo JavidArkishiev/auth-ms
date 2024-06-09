@@ -44,8 +44,8 @@ public class RoleController {
     }
 
     @GetMapping("all-roles-user")
-    public List<Role> getAllRolesUser(@RequestParam Long userId) {
-        return roleService.getAllRolesUser(userId);
+    public List<Role> getAllRolesUser(@RequestParam String email) {
+        return roleService.getAllRolesUser(email);
 
     }
 

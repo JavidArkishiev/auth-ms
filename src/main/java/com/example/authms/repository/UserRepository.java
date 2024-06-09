@@ -19,6 +19,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByOtp(String otp);
 
 
-    @Query("SELECT r FROM Role r JOIN r.users u WHERE u.id = :userId")
-    List<Role> findAllByUserId(Long userId);
+    @Query("SELECT r FROM Role r JOIN r.users u WHERE u.email = :email")
+    List<Role> findAllByUserId(String email);
 }
