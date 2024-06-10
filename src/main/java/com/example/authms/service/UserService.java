@@ -1,5 +1,6 @@
 package com.example.authms.service;
 
+import com.example.authms.dto.request.ChangePasswordRequest;
 import com.example.authms.dto.request.UserRequestDto;
 import com.example.authms.dto.response.UserResponseDto;
 import com.example.authms.entity.User;
@@ -8,12 +9,15 @@ import com.example.authms.mapper.UserMapper;
 import com.example.authms.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
 import java.util.List;
 
 @Service
@@ -22,6 +26,12 @@ public class UserService {
     private UserRepository userRepository;
     private UserMapper userMapper;
     private JWTService jwtService;
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @Autowired
     public void setJwtService(JWTService jwtService) {
@@ -83,4 +93,16 @@ public class UserService {
     }
 
 
+    public void changePassword(Principal principal, ChangePasswordRequest request) {
+        var user = (User) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
+        if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
+            throw new AllException("cari şifrə doğru deyil");
+        }
+        if (!request.getNewPassword().equals(request.getConfirmationPassword())) {
+            throw new AllException("hər iki şifrə eyni olmalıdır");
+        }
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        userRepository.save(user);
+
+    }
 }

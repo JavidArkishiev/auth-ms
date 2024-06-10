@@ -153,19 +153,6 @@ public class AuthService {
 
     }
 
-    public void changePassword(Principal principal, ChangePasswordRequest request) {
-        var user = (User) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
-        if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
-            throw new AllException("cari şifrə doğru deyil");
-        }
-        if (!request.getNewPassword().equals(request.getConfirmationPassword())) {
-            throw new AllException("hər iki şifrə eyni olmalıdır");
-        }
-        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
-        userRepository.save(user);
-
-    }
-
     public void increaseFailedAttempts(User user) throws MessagingException {
         int newFailAttempts = user.getFailedAttempt() + 1;
         user.setFailedAttempt(newFailAttempts);

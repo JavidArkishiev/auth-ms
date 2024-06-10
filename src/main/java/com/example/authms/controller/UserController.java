@@ -1,13 +1,17 @@
 package com.example.authms.controller;
 
+import com.example.authms.dto.request.ChangePasswordRequest;
 import com.example.authms.dto.request.UserRequestDto;
 import com.example.authms.dto.response.UserResponseDto;
 import com.example.authms.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -45,5 +49,14 @@ public class UserController {
     public String deleteUserById() {
         userService.deleteUser();
         return "Hesabınız uğurla silindi";
+    }
+
+    @PutMapping("change-password")
+    @PreAuthorize("hasAuthority('USER')")
+    public ResponseEntity<String> changePassword(@RequestBody @Valid ChangePasswordRequest request,
+                                                 Principal principal) {
+        userService.changePassword(principal, request);
+        return ResponseEntity.ok("Success");
+
     }
 }

@@ -61,16 +61,4 @@ public class AuthController {
                 " You can login a website with new password");
     }
 
-    @PutMapping("change-password")
-    public ResponseEntity<String> changePassword(@RequestBody ChangePasswordRequest request,
-                                                 Principal principal) {
-        authService.changePassword(principal, request);
-        return ResponseEntity.ok("Success");
-
-    }
-
-    @GetMapping("test-api")
-    public String get() {
-        return "Bu bir Test API dir ";
-    }
 }
