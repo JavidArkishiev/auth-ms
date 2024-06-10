@@ -25,14 +25,13 @@ public class RoleService {
 
     }
 
-    public RoleRequestDto createRole(RoleRequestDto role) {
+    public void createRole(RoleRequestDto role) {
         Optional<Role> checkRole = roleRepository.findByName(role.getName());
         if (checkRole.isPresent()) {
-            throw new AllException(checkRole.get().getName() + " role already exist");
+            throw new AllException(checkRole.get().getName() + " rolu artıq sistemdə mövcuddur");
         }
         Role roleEntity = roleMapper.mapToRoleEntity(role);
         roleRepository.save(roleEntity);
-        return role;
     }
 
     public Role findById(Long roleId) {
@@ -52,13 +51,16 @@ public class RoleService {
 //
 //    }
 
-    public Role removeAllUserFromRole(Long roleId) {
+    public void removeAllUserFromRole(Long roleId) {
         Optional<Role> role = roleRepository.findById(roleId);
+        if (role.isEmpty()) {
+            throw new AllException("rol tapılmadı ");
+        }
         role.ifPresent(Role::removeAllUsersFromRole);
-        return roleRepository.save(role.get());
+        roleRepository.save(role.get());
     }
 
-    public User assignUserToRole(Long userId, Long roleId) {
+    public void assignUserToRole(Long userId, Long roleId) {
         Optional<User> user = userRepository.findById(userId);
         Optional<Role> role = roleRepository.findById(roleId);
         if (user.isPresent() && user.get().getRoles().contains(role.get())) {
@@ -67,23 +69,21 @@ public class RoleService {
         }
         role.ifPresent(Role -> Role.assignUserToRole(user.get()));
         roleRepository.save(role.get());
-        return user.get();
+
 
     }
 
-    public User removeUserFromRole(Long userId, Long roleId) {
+    public void removeUserFromRole(Long userId, Long roleId) {
         Optional<User> user = userRepository.findById(userId);
         Optional<Role> role = roleRepository.findById(roleId);
         if (role.isPresent() && role.get().getUsers().contains(user.get())) {
             role.get().removeUserFromRole(user.get());
             roleRepository.save(role.get());
-            return user.get();
+            user.get();
         }
-        throw new AllException("User not found!");
     }
 
     public List<Role> getAllRolesUser(String email) {
         return userRepository.findAllByUserId(email);
-
     }
 }

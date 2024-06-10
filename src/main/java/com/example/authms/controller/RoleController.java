@@ -22,16 +22,17 @@ public class RoleController {
 
 
     @PostMapping()
-    public ResponseEntity<RoleRequestDto> crateRole(@RequestBody RoleRequestDto role) {
-        return new ResponseEntity<>(roleService.createRole(role), CREATED);
+    public ResponseEntity<String> crateRole(@RequestBody RoleRequestDto role) {
+        roleService.createRole(role);
+        return ResponseEntity.ok("Yeni rol yaradıldı");
     }
 
     @PostMapping("assign-role-to-user")
-    public User assignUserToRole(@RequestParam Long userId,
-                                 @RequestParam Long roleId) {
-        return roleService.assignUserToRole(userId, roleId);
+    public String assignUserToRole(@RequestParam Long userId,
+                                   @RequestParam Long roleId) {
+        roleService.assignUserToRole(userId, roleId);
+        return "İstifadəçiyə yeni rol verildi";
     }
-
 
     @GetMapping()
     public ResponseEntity<List<Role>> getAllRoles() {
@@ -49,7 +50,6 @@ public class RoleController {
 
     }
 
-
     @DeleteMapping("/{roleId}")
     @ResponseStatus(OK)
     public String deleteRole(@PathVariable Long roleId) {
@@ -57,18 +57,16 @@ public class RoleController {
         return "SUCCESS";
     }
 
-
     @DeleteMapping("remove-all-role-from-users/{roleId}")
-    public Role removeAllUsersFromRole(@PathVariable Long roleId) {
-        return roleService.removeAllUserFromRole(roleId);
+    public String removeAllUsersFromRole(@PathVariable Long roleId) {
+        roleService.removeAllUserFromRole(roleId);
+        return "Bu rol bütün istifadəçilərdən silindi";
     }
-
 
     @DeleteMapping("remove-role-from-user")
-    public User removeUserFromRole(@RequestParam Long userId,
-                                   @RequestParam Long roleId) {
-        return roleService.removeUserFromRole(userId, roleId);
+    public String removeUserFromRole(@RequestParam Long userId,
+                                     @RequestParam Long roleId) {
+        roleService.removeUserFromRole(userId, roleId);
+        return "İstifadəçidən rol silindi";
     }
-
-
 }
