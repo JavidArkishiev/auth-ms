@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
 import java.util.Set;
 
 @Data
@@ -25,22 +24,5 @@ public class Role {
     @JsonIgnore
     @ManyToMany(mappedBy = "roles")
     private Set<User> users;
-
-    public void removeAllUsersFromRole() {
-        if (this.getUsers() != null) {
-            List<User> usersInRole = this.getUsers().stream().toList();
-            usersInRole.forEach(this::removeUserFromRole);
-        }
-    }
-
-    public void removeUserFromRole(User user) {
-        user.getRoles().remove(this);
-        this.getUsers().remove(user);
-    }
-
-    public void assignUserToRole(User user) {
-        user.getRoles().add(this);
-        this.getUsers().add(user);
-    }
 
 }

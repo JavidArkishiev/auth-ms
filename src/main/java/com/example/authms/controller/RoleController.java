@@ -54,7 +54,7 @@ public class RoleController {
     @ResponseStatus(OK)
     public String deleteRole(@PathVariable Long roleId) {
         roleService.deleteRole(roleId);
-        return "SUCCESS";
+        return "rol sistemdən silindi";
     }
 
     @DeleteMapping("remove-all-role-from-users/{roleId}")

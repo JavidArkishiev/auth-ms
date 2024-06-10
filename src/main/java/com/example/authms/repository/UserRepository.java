@@ -4,7 +4,6 @@ import com.example.authms.entity.Role;
 import com.example.authms.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.history.RevisionRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,5 +19,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 
     @Query("SELECT r FROM Role r JOIN r.users u WHERE u.email = :email")
-    List<Role> findAllByUserId(String email);
+    List<Role> findAllByEmail(String email);
 }
