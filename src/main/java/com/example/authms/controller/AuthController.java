@@ -1,6 +1,9 @@
 package com.example.authms.controller;
 
-import com.example.authms.dto.request.*;
+import com.example.authms.dto.request.LoginRequest;
+import com.example.authms.dto.request.OtpDto;
+import com.example.authms.dto.request.ResetPasswordRequest;
+import com.example.authms.dto.request.SignUpRequest;
 import com.example.authms.dto.response.AuthResponse;
 import com.example.authms.exception.ExistEmailException;
 import com.example.authms.service.AuthService;
@@ -14,7 +17,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.security.Principal;
 
 @RestController
 @RequiredArgsConstructor
@@ -34,7 +36,6 @@ public class AuthController {
     public AuthResponse login(@Valid @RequestBody LoginRequest loginRequest) throws MessagingException {
         return authService.login(loginRequest);
     }
-
 
     @PostMapping("verify-account")
     public ResponseEntity<String> verifyUser(@RequestBody @Valid OtpDto otp) {
