@@ -1,9 +1,6 @@
 package com.example.authms.service;
 
-import com.example.authms.dto.request.LoginRequest;
-import com.example.authms.dto.request.OtpDto;
-import com.example.authms.dto.request.ResetPasswordRequest;
-import com.example.authms.dto.request.SignUpRequest;
+import com.example.authms.dto.request.*;
 import com.example.authms.dto.response.AuthResponse;
 import com.example.authms.entity.User;
 import com.example.authms.exception.AllException;
@@ -198,28 +195,18 @@ public class AuthService {
     }
 
 
-    public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-        final String refreshToken;
-        final String userEmail;
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            return;
-        }
-        refreshToken = authHeader.substring(7);
-        userEmail = jwtService.extractUsername(refreshToken);
-        if (userEmail != null) {
-            var user = userRepository.findByEmail(userEmail)
-                    .orElseThrow();
-            if (jwtService.isTokenValid(refreshToken, user)) {
-                var accessToken = jwtService.generateToken(user);
+    public AccessTokenRequest refreshToken(RefreshTokenRequest refreshTokenRequest) {
 
-                var authResponse = AuthResponse.builder()
-                        .accessToken(accessToken)
-                        .refreshToken(refreshToken)
-                        .build();
-                new ObjectMapper().writeValue(response.getOutputStream(), authResponse);
-            }
+        var userEmail = jwtService.extractUsername(refreshTokenRequest.getRefreshToken());
+        var user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new AllException("User not found"));
+        if (jwtService.isTokenValid(refreshTokenRequest.getRefreshToken(), user)) {
+            var accessToken = jwtService.generateToken(user);
+            return AccessTokenRequest.builder()
+                    .accessToken(accessToken)
+                    .build();
         }
+        return null;
     }
 }
 

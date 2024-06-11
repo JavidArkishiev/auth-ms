@@ -1,9 +1,6 @@
 package com.example.authms.controller;
 
-import com.example.authms.dto.request.LoginRequest;
-import com.example.authms.dto.request.OtpDto;
-import com.example.authms.dto.request.ResetPasswordRequest;
-import com.example.authms.dto.request.SignUpRequest;
+import com.example.authms.dto.request.*;
 import com.example.authms.dto.response.AuthResponse;
 import com.example.authms.exception.ExistEmailException;
 import com.example.authms.service.AuthService;
@@ -67,8 +64,8 @@ public class AuthController {
 
     @PostMapping("refresh-token")
     @ResponseStatus(HttpStatus.OK)
-    public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        authService.refreshToken(request, response);
+    public AccessTokenRequest refreshToken(@RequestBody @Valid RefreshTokenRequest refreshTokenRequest) {
+        return authService.refreshToken(refreshTokenRequest);
     }
 
 }
