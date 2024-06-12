@@ -72,7 +72,7 @@ public class AuthService {
                     loginRequest.getPassword()));
             resetFailedAttempts(user.getEmail());
             var jwt = jwtService.generateToken(user);
-            var refreshToken = jwtService.generateRefreshToken(new HashMap<>(), user);
+            var refreshToken = jwtService.generateRefreshToken(user);
             return AuthResponse.builder().accessToken(jwt).refreshToken(refreshToken).build();
         } catch (AuthenticationException e) {
             increaseFailedAttempts(user);
