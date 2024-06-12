@@ -1,6 +1,7 @@
 package com.example.authms.controller;
 
 import com.example.authms.dto.request.ChangePasswordRequest;
+import com.example.authms.dto.request.DeletePasswordDto;
 import com.example.authms.dto.request.UserRequestDto;
 import com.example.authms.dto.response.UserResponseDto;
 import com.example.authms.service.UserService;
@@ -46,8 +47,8 @@ public class UserController {
     @DeleteMapping()
     @PreAuthorize("hasAuthority('USER')")
     @ResponseStatus(HttpStatus.OK)
-    public String deleteUserById() {
-        userService.deleteUser();
+    public String deleteUser(@Valid @RequestBody DeletePasswordDto passwordDto) {
+        userService.deleteUser(passwordDto);
         return "Hesabınız uğurla silindi";
     }
 

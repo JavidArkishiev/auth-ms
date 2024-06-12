@@ -7,22 +7,16 @@ import com.example.authms.exception.AllException;
 import com.example.authms.exception.ExistEmailException;
 import com.example.authms.mapper.UserMapper;
 import com.example.authms.repository.UserRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.mail.MessagingException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.HashMap;
 
 @Service
 @RequiredArgsConstructor

@@ -1,6 +1,7 @@
 package com.example.authms.service;
 
 import com.example.authms.dto.request.ChangePasswordRequest;
+import com.example.authms.dto.request.DeletePasswordDto;
 import com.example.authms.dto.request.UserRequestDto;
 import com.example.authms.dto.response.UserResponseDto;
 import com.example.authms.entity.User;
@@ -84,11 +85,14 @@ public class UserService {
 
     }
 
-    public void deleteUser() {
+    public void deleteUser(DeletePasswordDto passwordDto) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         User userEntity = userRepository.findByEmail(username)
                 .orElseThrow(() -> new AllException("istifadəçi tapılmadı"));
+        if (!passwordEncoder.matches(passwordDto.getPassword(), userEntity.getPassword())) {
+            throw new AllException("istifəçi şifrəniz doğru deyil");
+        }
         userRepository.delete(userEntity);
     }
 
