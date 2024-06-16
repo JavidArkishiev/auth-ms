@@ -13,11 +13,8 @@ public class SignUpRequest {
     @Pattern(regexp = "^[\\w._%+-]+@[\\w.-]+\\.[a-zA-Z]{2,6}$", message = "email düzgün deyil")
     private String email;
 
-    @NotBlank(message = "ad boş ola bilməz")
-    private String name;
-
-    @NotBlank(message = "soyad can not be null")
-    private String surname;
+    @NotBlank(message = "ad və soyad boş ola bilməz")
+    private String fullName;
 
     @NotBlank(message = "şifrə boş ola bilməz")
     @Size(min = 6, message = "şifrə ən azı 6 simvoldan ibarət olmalıdır")

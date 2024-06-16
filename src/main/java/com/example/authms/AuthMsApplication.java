@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
@@ -19,6 +20,7 @@ import java.util.Optional;
 @SpringBootApplication
 @RequiredArgsConstructor
 @Slf4j
+@EnableScheduling
 public class AuthMsApplication implements CommandLineRunner {
 
     public static void main(String[] args) {
@@ -42,8 +44,7 @@ public class AuthMsApplication implements CommandLineRunner {
         if (adminOptional.isEmpty()) {
             User user = new User();
             user.setEmail(adminEmail);
-            user.setName("Anar");
-            user.setSurname("Eyvazov");
+            user.setFullName("Anar Eyvazov");
             user.setCreationDate(LocalDateTime.now());
             user.setEnabled(true);
             user.setOtp(userMapper.generateRandomOtp());

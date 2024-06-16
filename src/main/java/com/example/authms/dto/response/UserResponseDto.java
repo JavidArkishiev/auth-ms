@@ -7,9 +7,7 @@ import lombok.Data;
 public class UserResponseDto {
 
     private Long userId;
-    private String name;
-
-    private String surname;
+    private String fullName;
 
     private String email;
 

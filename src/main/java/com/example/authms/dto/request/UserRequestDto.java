@@ -6,7 +6,6 @@ import lombok.Data;
 
 @Data
 public class UserRequestDto {
-    private String name;
-    private String surname;
+    private String fullName;
 
 }

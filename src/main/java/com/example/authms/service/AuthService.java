@@ -9,6 +9,7 @@ import com.example.authms.mapper.UserMapper;
 import com.example.authms.repository.UserRepository;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
@@ -17,6 +18,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.LinkedList;
+import java.util.Queue;
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +30,8 @@ public class AuthService {
     private final JWTService jwtService;
     private final EmailService emailService;
     private final PasswordEncoder passwordEncoder;
+    private final Queue<User> signUpQueue = new LinkedList<>();
+
 
     public void userSignUp(SignUpRequest signUpRequest) throws ExistEmailException, MessagingException {
         if (userRepository.existsByEmail(signUpRequest.getEmail())) {
@@ -39,9 +44,18 @@ public class AuthService {
 
         User userEntity = userMapper.mapToEntity(signUpRequest);
         userRepository.save(userEntity);
-        sendVerificationEmail(userEntity.getEmail(), userEntity.getOtp());
+        signUpQueue.add(userEntity);
 
     }
+
+    @Scheduled(fixedRate = 2000)
+    public void processSignUpQueue() throws MessagingException {
+        User userEntity;
+        while ((userEntity = signUpQueue.poll()) != null) {
+            sendVerificationEmail(userEntity.getEmail(), userEntity.getOtp());
+        }
+    }
+
 
     public AuthResponse login(LoginRequest loginRequest) throws MessagingException {
         var user = userRepository.findByEmail(loginRequest.getEmail())

@@ -47,7 +47,7 @@ public class RoleService {
                 .orElseThrow(() -> new AllException("role tapılmadı"));
 
         if (user.getRoles().contains(role)) {
-            throw new AllException(user.getName() + " artıq " + role.getName() + " rolu almışdır");
+            throw new AllException(user.getFullName() + " artıq " + role.getName() + " rolu almışdır");
         }
         role.getUsers().add(user);
         user.getRoles().add(role);
