@@ -31,8 +31,8 @@ public class ExceptionHandle {
 
     }
 
-    @ExceptionHandler(AllException.class)
-    public ResponseEntity<ErrorDetails> handleUserNotfoundException(AllException e) {
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ErrorDetails> handleUserNotfoundException(UserNotFoundException e) {
         ErrorDetails errorDetails = new ErrorDetails();
         errorDetails.setMessage(e.getMessage());
         errorDetails.setStatusCode(HttpStatus.NOT_FOUND.value());

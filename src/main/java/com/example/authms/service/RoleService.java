@@ -3,7 +3,8 @@ package com.example.authms.service;
 import com.example.authms.dto.request.RoleRequestDto;
 import com.example.authms.entity.Role;
 import com.example.authms.entity.User;
-import com.example.authms.exception.AllException;
+import com.example.authms.exception.ExistEmailException;
+import com.example.authms.exception.UserNotFoundException;
 import com.example.authms.mapper.RoleMapper;
 import com.example.authms.repository.RoleRepository;
 import com.example.authms.repository.UserRepository;
@@ -11,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -21,9 +21,9 @@ public class RoleService {
     private final RoleMapper roleMapper;
 
 
-    public void createRole(RoleRequestDto role) {
+    public void createRole(RoleRequestDto role) throws ExistEmailException {
         if (roleRepository.existsByName(role.getName())) {
-            throw new AllException("bu rol sistemde movcuddur");
+            throw new ExistEmailException("bu rol sistemde movcuddur");
         }
         Role roleEntity = roleMapper.mapToRoleEntity(role);
         roleRepository.save(roleEntity);
@@ -31,7 +31,7 @@ public class RoleService {
 
     public Role findById(Long roleId) {
         return roleRepository.findById(roleId)
-                .orElseThrow(() -> new AllException("role tapılmadı"));
+                .orElseThrow(() -> new UserNotFoundException("role tapılmadı"));
     }
 
     public List<Role> getAllRoles() {
@@ -41,13 +41,13 @@ public class RoleService {
 
     public void assignUserToRole(Long userId, Long roleId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new AllException("istifadəçi tapılmadı"));
+                .orElseThrow(() -> new UserNotFoundException("istifadəçi tapılmadı"));
 
         Role role = roleRepository.findById(roleId)
-                .orElseThrow(() -> new AllException("role tapılmadı"));
+                .orElseThrow(() -> new UserNotFoundException("role tapılmadı"));
 
         if (user.getRoles().contains(role)) {
-            throw new AllException(user.getFullName() + " artıq " + role.getName() + " rolu almışdır");
+            throw new UserNotFoundException(user.getFullName() + " artıq " + role.getName() + " rolu almışdır");
         }
         role.getUsers().add(user);
         user.getRoles().add(role);
@@ -61,12 +61,12 @@ public class RoleService {
 
     public void removeUserFromRole(Long userId, Long roleId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new AllException("istifadəçi tapılmadı"));
+                .orElseThrow(() -> new UserNotFoundException("istifadəçi tapılmadı"));
 
         Role role = roleRepository.findById(roleId)
-                .orElseThrow(() -> new AllException("role tapılmadı"));
+                .orElseThrow(() -> new UserNotFoundException("role tapılmadı"));
         if (!user.getRoles().contains(role)) {
-            throw new AllException("bu rol istifadəçiden artıq silinib");
+            throw new UserNotFoundException("bu rol istifadəçiden artıq silinib");
         }
         user.getRoles().remove(role);
         role.getUsers().remove(user);
@@ -76,14 +76,12 @@ public class RoleService {
 
     public void removeAllUserFromRole(Long roleId) {
         var role = roleRepository.findById(roleId)
-                .orElseThrow(() -> new AllException("role tapilmadi"));
+                .orElseThrow(() -> new UserNotFoundException("role tapilmadi"));
         if (role.getUsers().isEmpty()) {
-            throw new AllException("Bu rol artıq bütün istifadəçilərdən silinib");
+            throw new UserNotFoundException("Bu rol artıq bütün istifadəçilərdən silinib");
 
         }
-        role.getUsers().forEach(user -> {
-            user.getRoles().remove(role);
-        });
+        role.getUsers().forEach(user -> user.getRoles().remove(role));
 
         roleRepository.save(role);
     }
@@ -91,7 +89,7 @@ public class RoleService {
 
     public void deleteRole(Long roleId) {
         Role role = roleRepository.findById(roleId)
-                .orElseThrow(() -> new AllException("role tapılmadı"));
+                .orElseThrow(() -> new UserNotFoundException("role tapılmadı"));
         roleRepository.delete(role);
 
     }

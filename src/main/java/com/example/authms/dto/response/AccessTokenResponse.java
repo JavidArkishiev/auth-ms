@@ -1,4 +1,4 @@
-package com.example.authms.dto.request;
+package com.example.authms.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
@@ -10,7 +10,7 @@ import lombok.ToString;
 @Setter
 @ToString
 @Builder
-public class AccessTokenRequest {
+public class AccessTokenResponse {
     @JsonProperty("access_token")
     private String accessToken;
 }

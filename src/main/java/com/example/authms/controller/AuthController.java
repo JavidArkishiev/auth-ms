@@ -1,19 +1,16 @@
 package com.example.authms.controller;
 
 import com.example.authms.dto.request.*;
+import com.example.authms.dto.response.AccessTokenResponse;
 import com.example.authms.dto.response.AuthResponse;
 import com.example.authms.exception.ExistEmailException;
 import com.example.authms.service.AuthService;
 import jakarta.mail.MessagingException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.io.IOException;
 
 @RestController
 @RequiredArgsConstructor
@@ -35,7 +32,7 @@ public class AuthController {
     }
 
     @PostMapping("verify-account")
-    public ResponseEntity<String> verifyUser(@RequestBody @Valid OtpDto otp) {
+    public ResponseEntity<String> verifyUser(@RequestBody @Valid OtpDto otp) throws ExistEmailException {
         authService.verifyAccount(otp);
         return ResponseEntity.ok("Success.Your account has activated." +
                 " You can login a website");
@@ -56,7 +53,7 @@ public class AuthController {
     }
 
     @PostMapping("reset-password")
-    public ResponseEntity<String> resetPassword(@RequestBody @Valid ResetPasswordRequest resetPasswordRequest) {
+    public ResponseEntity<String> resetPassword(@RequestBody @Valid ResetPasswordRequest resetPasswordRequest) throws ExistEmailException {
         authService.resetPassword(resetPasswordRequest);
         return ResponseEntity.ok("Password has been reset successfully." +
                 " You can login a website with new password");
@@ -64,7 +61,7 @@ public class AuthController {
 
     @PostMapping("refresh-token")
     @ResponseStatus(HttpStatus.OK)
-    public AccessTokenRequest refreshToken(@RequestBody @Valid RefreshTokenRequest refreshTokenRequest) {
+    public AccessTokenResponse refreshToken(@RequestBody @Valid RefreshTokenRequest refreshTokenRequest) {
         return authService.refreshToken(refreshTokenRequest);
     }
 

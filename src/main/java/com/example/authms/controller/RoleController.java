@@ -3,6 +3,7 @@ package com.example.authms.controller;
 import com.example.authms.dto.request.RoleRequestDto;
 import com.example.authms.entity.Role;
 import com.example.authms.entity.User;
+import com.example.authms.exception.ExistEmailException;
 import com.example.authms.service.RoleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +23,7 @@ public class RoleController {
 
 
     @PostMapping()
-    public ResponseEntity<String> crateRole(@RequestBody RoleRequestDto role) {
+    public ResponseEntity<String> crateRole(@RequestBody RoleRequestDto role) throws ExistEmailException {
         roleService.createRole(role);
         return ResponseEntity.ok("Yeni rol yaradıldı");
     }

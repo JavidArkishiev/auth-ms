@@ -36,6 +36,13 @@ public class UserController {
         return userService.getUser();
     }
 
+    @GetMapping("by-name")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @ResponseStatus(HttpStatus.OK)
+    public UserResponseDto getUserByName(@RequestParam String email) {
+        return userService.getUserByName(email);
+    }
+
     @PutMapping()
     @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
     @ResponseStatus(HttpStatus.OK)
