@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 public class OtpDto {
 
-    @NotBlank(message= "otp boş ola bilməz")
-    @Size(min = 6, max = 6, message = "otp kodu 6 simvoldan ibarət olmalıdır")
+    @NotBlank(message= "Otp boş ola bilməz")
+    @Size(min = 6, max = 6, message = "Otp kodu 6 simvoldan ibarət olmalıdır")
     private String otp;
 }

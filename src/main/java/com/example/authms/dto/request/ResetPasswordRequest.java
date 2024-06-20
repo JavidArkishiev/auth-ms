@@ -9,13 +9,13 @@ import lombok.Data;
 public class ResetPasswordRequest {
 
     private String otp;
-    @NotBlank(message = "şifrə boş ola bilməz")
-    @Size(min = 6, message = "şifrə ən azı 6 simvoldan ibarət olmalıdır")
+    @NotBlank(message = "Şifrə boş ola bilməz")
+    @Size(min = 6, message = "Şifrə ən azı 6 simvoldan ibarət olmalıdır")
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$",
-            message = "şifrədə ən az bir böyük latın hərfi,bir kiçik latın hərfi və rəqəm istifadə olunmalıdır")
+            message = "Şifrədə ən az bir böyük latın hərfi,bir kiçik latın hərfi və rəqəm istifadə olunmalıdır")
     private String newPassword;
 
-    @NotBlank(message = "şifrə boş ola bilməz")
+    @NotBlank(message = "Şifrə boş ola bilməz")
     private String confirmNewPassword;
 
 }

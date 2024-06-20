@@ -36,11 +36,11 @@ public class AuthService {
 
     public void userSignUp(SignUpRequest signUpRequest) throws ExistEmailException, MessagingException {
         if (userRepository.existsByEmail(signUpRequest.getEmail())) {
-            throw new ExistEmailException("bu e-poçt ünvanı üzrə sistemdə istifadəçi mövcuddur");
+            throw new ExistEmailException("Bu e-poçt ünvanı üzrə sistemdə istifadəçi mövcuddur");
         }
 
         if (!signUpRequest.getPassword().matches(signUpRequest.getConfirmPassword())) {
-            throw new ExistEmailException("hər iki şifrə eyni olmalıdır");
+            throw new ExistEmailException("Hər iki şifrə eyni olmalıdır");
         }
 
         User userEntity = userMapper.mapToEntity(signUpRequest);
@@ -60,7 +60,7 @@ public class AuthService {
 
     public AuthResponse login(LoginRequest loginRequest) throws MessagingException {
         var user = userRepository.findByEmail(loginRequest.getEmail())
-                .orElseThrow(() -> new UserNotFoundException("e-mail və ya şifrə yanlışdır"));
+                .orElseThrow(() -> new UserNotFoundException("E-mail və ya şifrə yanlışdır"));
 
         if (!user.isEnabled()) {
             regenerateOtp(user.getEmail());
@@ -91,7 +91,7 @@ public class AuthService {
                 throw new UserNotFoundException("Çox giriş cəhdi zəhmət olamasa biraz sonra yenidən cəhd edin");
             }
 
-            throw new UserNotFoundException("e-mail və ya şifrə yanlışdır");
+            throw new UserNotFoundException("E-mail və ya şifrə yanlışdır");
         }
     }
 
@@ -111,9 +111,9 @@ public class AuthService {
     public void verifyAccount(OtpDto otpDto) throws ExistEmailException {
 
         User user = userRepository.findByOtp(otpDto.getOtp())
-                .orElseThrow(() -> new UserNotFoundException("istifadəçi tapılmadı və ya kod yanlışdır"));
+                .orElseThrow(() -> new UserNotFoundException("Kod yanlışdır"));
         if (user.isEnabled()) {
-            throw new ExistEmailException("bu istifadəçi artıq aktivdir");
+            throw new ExistEmailException("Bu istifadəçi artıq aktivdir");
         }
 
         if (Duration.between(user.getOtpGeneratedTime()
@@ -131,7 +131,7 @@ public class AuthService {
     public void regenerateOtp(String email) throws MessagingException {
         String otp = userMapper.generateRandomOtp();
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserNotFoundException("istifadəçi tapılmadı"));
+                .orElseThrow(() -> new UserNotFoundException("İstifadəçi tapılmadı"));
         user.setOtp(otp);
         user.setOtpGeneratedTime(LocalDateTime.now());
         userRepository.save(user);
@@ -141,7 +141,7 @@ public class AuthService {
 
     public void forgetPassword(String email) throws MessagingException {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserNotFoundException("istifadəçi tapılmadı"));
+                .orElseThrow(() -> new UserNotFoundException("İstifadəçi tapılmadı"));
 
         regenerateOtp(user.getEmail());
         userRepository.save(user);
@@ -150,7 +150,7 @@ public class AuthService {
 
     public void resetPassword(ResetPasswordRequest resetPasswordRequest) throws ExistEmailException {
         User user = userRepository.findByOtp(resetPasswordRequest.getOtp())
-                .orElseThrow(() -> new UserNotFoundException("istifadəçi tapılmadı və ya kod yanlışdır"));
+                .orElseThrow(() -> new UserNotFoundException("Kod yanlışdır"));
 
         if (Duration.between(user.getOtpGeneratedTime()
                         , LocalDateTime.now()).
@@ -160,7 +160,7 @@ public class AuthService {
         }
 
         if (!resetPasswordRequest.getNewPassword().matches(resetPasswordRequest.getConfirmNewPassword())) {
-            throw new ExistEmailException("hər iki şifrə eyni olmalıdır");
+            throw new ExistEmailException("Hər iki şifrə eyni olmalıdır");
         }
         user.setPassword(passwordEncoder.encode(resetPasswordRequest.getNewPassword()));
         userRepository.save(user);
@@ -210,7 +210,7 @@ public class AuthService {
 
         var userEmail = jwtService.extractUsername(refreshTokenRequest.getRefreshToken());
         var user = userRepository.findByEmail(userEmail)
-                .orElseThrow(() -> new UserNotFoundException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException("İstifadəçi tapılmadı"));
         if (jwtService.isTokenValid(refreshTokenRequest.getRefreshToken(), user)) {
             var accessToken = jwtService.generateToken(user);
             return AccessTokenResponse.builder()

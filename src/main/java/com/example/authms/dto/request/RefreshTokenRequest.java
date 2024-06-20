@@ -11,7 +11,7 @@ import lombok.ToString;
 @Setter
 @ToString
 public class RefreshTokenRequest {
-    @JsonProperty("refresh_token")
-    @NotBlank(message = "refreshToken can not be null")
+    @JsonProperty("Refresh_token")
+    @NotBlank(message = "RefreshToken can not be null")
     private String refreshToken;
 }

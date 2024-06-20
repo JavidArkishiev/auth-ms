@@ -23,7 +23,7 @@ public class RoleService {
 
     public void createRole(RoleRequestDto role) throws ExistEmailException {
         if (roleRepository.existsByName(role.getName())) {
-            throw new ExistEmailException("bu rol sistemde movcuddur");
+            throw new ExistEmailException("Bu rol sistemde movcuddur");
         }
         Role roleEntity = roleMapper.mapToRoleEntity(role);
         roleRepository.save(roleEntity);
@@ -31,7 +31,7 @@ public class RoleService {
 
     public Role findById(Long roleId) {
         return roleRepository.findById(roleId)
-                .orElseThrow(() -> new UserNotFoundException("role tapılmadı"));
+                .orElseThrow(() -> new UserNotFoundException("Role tapılmadı"));
     }
 
     public List<Role> getAllRoles() {
@@ -41,10 +41,10 @@ public class RoleService {
 
     public void assignUserToRole(Long userId, Long roleId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("istifadəçi tapılmadı"));
+                .orElseThrow(() -> new UserNotFoundException("İstifadəçi tapılmadı"));
 
         Role role = roleRepository.findById(roleId)
-                .orElseThrow(() -> new UserNotFoundException("role tapılmadı"));
+                .orElseThrow(() -> new UserNotFoundException("Role tapılmadı"));
 
         if (user.getRoles().contains(role)) {
             throw new UserNotFoundException(user.getFullName() + " artıq " + role.getName() + " rolu almışdır");
@@ -61,12 +61,12 @@ public class RoleService {
 
     public void removeUserFromRole(Long userId, Long roleId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("istifadəçi tapılmadı"));
+                .orElseThrow(() -> new UserNotFoundException("İstifadəçi tapılmadı"));
 
         Role role = roleRepository.findById(roleId)
-                .orElseThrow(() -> new UserNotFoundException("role tapılmadı"));
+                .orElseThrow(() -> new UserNotFoundException("Role tapılmadı"));
         if (!user.getRoles().contains(role)) {
-            throw new UserNotFoundException("bu rol istifadəçiden artıq silinib");
+            throw new UserNotFoundException("Bu rol istifadəçiden artıq silinib");
         }
         user.getRoles().remove(role);
         role.getUsers().remove(user);
@@ -76,7 +76,7 @@ public class RoleService {
 
     public void removeAllUserFromRole(Long roleId) {
         var role = roleRepository.findById(roleId)
-                .orElseThrow(() -> new UserNotFoundException("role tapilmadi"));
+                .orElseThrow(() -> new UserNotFoundException("Role tapilmadi"));
         if (role.getUsers().isEmpty()) {
             throw new UserNotFoundException("Bu rol artıq bütün istifadəçilərdən silinib");
 
@@ -89,7 +89,7 @@ public class RoleService {
 
     public void deleteRole(Long roleId) {
         Role role = roleRepository.findById(roleId)
-                .orElseThrow(() -> new UserNotFoundException("role tapılmadı"));
+                .orElseThrow(() -> new UserNotFoundException("Role tapılmadı"));
         roleRepository.delete(role);
 
     }

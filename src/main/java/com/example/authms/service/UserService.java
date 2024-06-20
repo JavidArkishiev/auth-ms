@@ -51,13 +51,13 @@ public class UserService {
 
     public UserDetailsService userDetailsService() {
         return email -> userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserNotFoundException("istifadəçi tapılmadı"));
+                .orElseThrow(() -> new UserNotFoundException("İstifadəçi tapılmadı"));
     }
 
     public List<UserResponseDto> getAllUser() {
         List<User> userList = userRepository.findAll();
         if (userList.isEmpty()) {
-            throw new UserNotFoundException("istifadəçi tapılmadı");
+            throw new UserNotFoundException("İstifadəçi tapılmadı");
         }
         return userMapper.mapToUserResponseDto(userList);
 
@@ -67,7 +67,7 @@ public class UserService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         User user = userRepository.findByEmail(username)
-                .orElseThrow(() -> new UserNotFoundException("istifadəçi tapılmadı"));
+                .orElseThrow(() -> new UserNotFoundException("İstifadəçi tapılmadı"));
         return userMapper.mapToUserDto(user);
     }
 
@@ -75,7 +75,7 @@ public class UserService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         User oldUser = userRepository.findByEmail(username)
-                .orElseThrow(() -> new UserNotFoundException("istifadəçi tapılmadı"));
+                .orElseThrow(() -> new UserNotFoundException("İstifadəçi tapılmadı"));
         if (oldUser != null) {
             User updateUser = userMapper.mapToUpdateUser(oldUser, userRequestDto);
             userRepository.save(updateUser);
@@ -88,9 +88,9 @@ public class UserService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         User userEntity = userRepository.findByEmail(username)
-                .orElseThrow(() -> new UserNotFoundException("istifadəçi tapılmadı"));
+                .orElseThrow(() -> new UserNotFoundException("İstifadəçi tapılmadı"));
         if (!passwordEncoder.matches(passwordDto.getPassword(), userEntity.getPassword())) {
-            throw new UserNotFoundException("istifəçi şifrəniz doğru deyil");
+            throw new UserNotFoundException("İstifəçi şifrəniz doğru deyil");
         }
         userRepository.delete(userEntity);
     }
@@ -99,10 +99,10 @@ public class UserService {
     public void changePassword(Principal principal, ChangePasswordRequest request) {
         var user = (User) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
         if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
-            throw new UserNotFoundException("cari şifrə doğru deyil");
+            throw new UserNotFoundException("Cari şifrə doğru deyil");
         }
         if (!request.getNewPassword().equals(request.getConfirmationPassword())) {
-            throw new UserNotFoundException("hər iki şifrə eyni olmalıdır");
+            throw new UserNotFoundException("Hər iki şifrə eyni olmalıdır");
         }
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         userRepository.save(user);
@@ -110,7 +110,7 @@ public class UserService {
 
     public UserResponseDto getUserByName(String email) {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserNotFoundException("istifadəçi tapılmadı"));
+                .orElseThrow(() -> new UserNotFoundException("İstifadəçi tapılmadı"));
         return userMapper.mapToUserDto(user);
     }
 }
