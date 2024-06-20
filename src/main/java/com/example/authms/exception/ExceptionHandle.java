@@ -15,9 +15,9 @@ public class ExceptionHandle {
     public ResponseEntity<ErrorDetails> handleValidationException(MethodArgumentNotValidException e) {
         ErrorDetails errorDetails = new ErrorDetails();
         errorDetails.setMessage(e.getBindingResult().getFieldError().getDefaultMessage());
-        errorDetails.setStatusCode(HttpStatus.NOT_FOUND.value());
+        errorDetails.setStatusCode(HttpStatus.BAD_REQUEST.value());
         errorDetails.setTimeStamp(LocalDateTime.now());
-        return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
 
     }
 
