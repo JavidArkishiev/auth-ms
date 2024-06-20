@@ -37,6 +37,9 @@ public class User implements UserDetails {
     @Column(name = "otp", unique = true)
     private String otp;
 
+    @Column(name = "uuid", unique = true)
+    private String UUID;
+
     @Column(name = "otp_generated_time", nullable = false)
     private LocalDateTime otpGeneratedTime = LocalDateTime.now();
 

@@ -3,6 +3,7 @@ package com.example.authms.controller;
 import com.example.authms.dto.request.*;
 import com.example.authms.dto.response.AccessTokenResponse;
 import com.example.authms.dto.response.AuthResponse;
+import com.example.authms.dto.response.UuidResponse;
 import com.example.authms.exception.ExistEmailException;
 import com.example.authms.exception.OtpTimeException;
 import com.example.authms.service.AuthService;
@@ -53,17 +54,26 @@ public class AuthController {
                 " You can reset password");
     }
 
-    @PostMapping("reset-password")
-    public ResponseEntity<String> resetPassword(@RequestBody @Valid ResetPasswordRequest resetPasswordRequest) throws ExistEmailException, OtpTimeException {
-        authService.resetPassword(resetPasswordRequest);
-        return ResponseEntity.ok("Password has been reset successfully." +
-                " You can login a website with new password");
-    }
 
     @PostMapping("refresh-token")
     @ResponseStatus(HttpStatus.OK)
     public AccessTokenResponse refreshToken(@RequestBody @Valid RefreshTokenRequest refreshTokenRequest) {
         return authService.refreshToken(refreshTokenRequest);
+    }
+
+    @PostMapping("/verify-otp")
+    @ResponseStatus(HttpStatus.OK)
+    public UuidResponse verifyOtp(@RequestBody @Valid OtpDto dto) throws OtpTimeException {
+        return authService.verifyOtp(dto);
+
+    }
+
+    @PostMapping("reset-password/{uuid}")
+    public ResponseEntity<String> resetPassword(@RequestBody @Valid ResetPasswordRequest resetPasswordRequest,
+                                                @PathVariable String uuid) throws ExistEmailException, OtpTimeException {
+        authService.resetPassword(resetPasswordRequest, uuid);
+        return ResponseEntity.ok("Password has been reset successfully." +
+                " You can login a website with new password");
     }
 
 }

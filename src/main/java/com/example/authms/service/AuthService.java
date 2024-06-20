@@ -3,6 +3,7 @@ package com.example.authms.service;
 import com.example.authms.dto.request.*;
 import com.example.authms.dto.response.AccessTokenResponse;
 import com.example.authms.dto.response.AuthResponse;
+import com.example.authms.dto.response.UuidResponse;
 import com.example.authms.entity.User;
 import com.example.authms.exception.OtpTimeException;
 import com.example.authms.exception.UserNotFoundException;
@@ -18,10 +19,13 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.security.SecureRandom;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Base64;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +37,8 @@ public class AuthService {
     private final EmailService emailService;
     private final PasswordEncoder passwordEncoder;
     private final Queue<User> signUpQueue = new LinkedList<>();
+    private static final SecureRandom secureRandom = new SecureRandom();
+    private static final Base64.Encoder base64Encoder = Base64.getUrlEncoder();
 
 
     public void userSignUp(SignUpRequest signUpRequest) throws ExistEmailException, MessagingException {
@@ -147,24 +153,6 @@ public class AuthService {
 
     }
 
-    public void resetPassword(ResetPasswordRequest resetPasswordRequest) throws ExistEmailException, OtpTimeException {
-        User user = userRepository.findByOtp(resetPasswordRequest.getOtp())
-                .orElseThrow(() -> new UserNotFoundException("Kod yanlışdır"));
-        if (Duration.between(user.getOtpGeneratedTime()
-                        , LocalDateTime.now()).
-                getSeconds() > 3 * 60) {
-            throw new OtpTimeException("Otp kodun istifadə müddəti bitmişdir. " +
-                    "Zəhmət olmasa otp kodu yenidən əldə edin");
-        }
-
-        if (!resetPasswordRequest.getNewPassword().matches(resetPasswordRequest.getConfirmNewPassword())) {
-            throw new ExistEmailException("Hər iki şifrə eyni olmalıdır");
-        }
-        user.setPassword(passwordEncoder.encode(resetPasswordRequest.getNewPassword()));
-        user.setOtp(null);
-        userRepository.save(user);
-
-    }
 
     public void increaseFailedAttempts(User user) throws MessagingException {
         int newFailAttempts = user.getFailedAttempt() + 1;
@@ -217,6 +205,44 @@ public class AuthService {
                     .build();
         }
         return null;
+    }
+
+    public UuidResponse verifyOtp(OtpDto dto) throws UserNotFoundException, OtpTimeException {
+        User user = userRepository.findByOtp(dto.getOtp())
+                .orElseThrow(() -> new UserNotFoundException("Kod yanlışdır"));
+
+        if (Duration.between(user.getOtpGeneratedTime(),
+                LocalDateTime.now()).getSeconds() > 3 * 60) {
+            throw new OtpTimeException("Otp kodun istifadə müddəti bitmişdir. Zəhmət olmasa otp kodu yenidən əldə edin");
+        }
+
+
+        String uuid = generateLongRandomString();
+        user.setUUID(uuid);
+        userRepository.save(user);
+        return UuidResponse.builder()
+                .uuid(uuid).build();
+
+    }
+
+    private String generateLongRandomString() {
+        byte[] randomBytes = new byte[64];
+        secureRandom.nextBytes(randomBytes);
+        return base64Encoder.encodeToString(randomBytes);
+    }
+
+    public void resetPassword(ResetPasswordRequest resetPasswordRequest, String uuid) throws ExistEmailException, OtpTimeException {
+        User user = userRepository.findByUUID(uuid)
+                .orElseThrow(() -> new UserNotFoundException("Uuid yanlışdır"));
+
+        if (!resetPasswordRequest.getNewPassword().matches(resetPasswordRequest.getConfirmNewPassword())) {
+            throw new ExistEmailException("Hər iki şifrə eyni olmalıdır");
+        }
+        user.setPassword(passwordEncoder.encode(resetPasswordRequest.getNewPassword()));
+        user.setOtp(null);
+        user.setUUID(null);
+        userRepository.save(user);
+
     }
 }
 
