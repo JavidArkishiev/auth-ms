@@ -49,7 +49,7 @@ public class AuthController {
     public ResponseEntity<String> forgetPassword(@RequestParam String email) throws MessagingException {
         authService.forgetPassword(email);
         return ResponseEntity.ok("OTP code sent to email address." +
-                " You can reset password. Note OTP timeLimit is 2 minute");
+                " You can reset password");
     }
 
     @PostMapping("reset-password")
