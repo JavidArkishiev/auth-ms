@@ -4,6 +4,7 @@ import com.example.authms.dto.request.*;
 import com.example.authms.dto.response.AccessTokenResponse;
 import com.example.authms.dto.response.AuthResponse;
 import com.example.authms.exception.ExistEmailException;
+import com.example.authms.exception.OtpTimeException;
 import com.example.authms.service.AuthService;
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
@@ -32,7 +33,7 @@ public class AuthController {
     }
 
     @PostMapping("verify-account")
-    public ResponseEntity<String> verifyUser(@RequestBody @Valid OtpDto otp) throws ExistEmailException {
+    public ResponseEntity<String> verifyUser(@RequestBody @Valid OtpDto otp) {
         authService.verifyAccount(otp);
         return ResponseEntity.ok("Success.Your account has activated." +
                 " You can login a website");
@@ -53,7 +54,7 @@ public class AuthController {
     }
 
     @PostMapping("reset-password")
-    public ResponseEntity<String> resetPassword(@RequestBody @Valid ResetPasswordRequest resetPasswordRequest) throws ExistEmailException {
+    public ResponseEntity<String> resetPassword(@RequestBody @Valid ResetPasswordRequest resetPasswordRequest) throws ExistEmailException, OtpTimeException {
         authService.resetPassword(resetPasswordRequest);
         return ResponseEntity.ok("Password has been reset successfully." +
                 " You can login a website with new password");

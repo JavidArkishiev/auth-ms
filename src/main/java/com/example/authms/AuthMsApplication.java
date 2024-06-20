@@ -47,7 +47,7 @@ public class AuthMsApplication implements CommandLineRunner {
             user.setFullName("Anar Eyvazov");
             user.setCreationDate(LocalDateTime.now());
             user.setEnabled(true);
-            user.setOtp(userMapper.generateRandomOtp());
+            user.setOtp(null);
             user.setOtpGeneratedTime(LocalDateTime.now());
             user.setPassword(passwordEncoder.encode("davidD123"));
             user.setRoles(mapRole());

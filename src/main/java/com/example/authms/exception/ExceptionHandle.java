@@ -40,4 +40,14 @@ public class ExceptionHandle {
         return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
 
     }
+
+    @ExceptionHandler(OtpTimeException.class)
+    public ResponseEntity<ErrorDetails> handleUserNotfoundException(OtpTimeException e) {
+        ErrorDetails errorDetails = new ErrorDetails();
+        errorDetails.setMessage(e.getMessage());
+        errorDetails.setStatusCode(HttpStatus.BAD_REQUEST.value());
+        errorDetails.setTimeStamp(LocalDateTime.now());
+        return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
+
+    }
 }

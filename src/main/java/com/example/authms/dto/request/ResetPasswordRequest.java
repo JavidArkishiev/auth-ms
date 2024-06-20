@@ -8,6 +8,8 @@ import lombok.Data;
 @Data
 public class ResetPasswordRequest {
 
+    @NotBlank(message = "Otp boş ola bilməz")
+    @Size(min = 6, max = 6, message = "Otp kodu 6 simvoldan ibarət olmalıdır")
     private String otp;
     @NotBlank(message = "Şifrə boş ola bilməz")
     @Size(min = 8, message = "Şifrə ən azı 8 simvoldan ibarət olmalıdır")

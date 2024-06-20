@@ -4,6 +4,7 @@ import com.example.authms.dto.request.*;
 import com.example.authms.dto.response.AccessTokenResponse;
 import com.example.authms.dto.response.AuthResponse;
 import com.example.authms.entity.User;
+import com.example.authms.exception.OtpTimeException;
 import com.example.authms.exception.UserNotFoundException;
 import com.example.authms.exception.ExistEmailException;
 import com.example.authms.mapper.UserMapper;
@@ -108,18 +109,16 @@ public class AuthService {
         emailService.sendEmail(email, subject, body);
     }
 
-    public void verifyAccount(OtpDto otpDto) throws ExistEmailException {
+    public void verifyAccount(OtpDto otpDto) {
 
         User user = userRepository.findByOtp(otpDto.getOtp())
                 .orElseThrow(() -> new UserNotFoundException("Kod yanlışdır"));
-        if (user.isEnabled()) {
-            throw new ExistEmailException("Bu istifadəçi artıq aktivdir");
-        }
 
         if (Duration.between(user.getOtpGeneratedTime()
                         , LocalDateTime.now()).
                 getSeconds() < 3 * 60) {
             user.setEnabled(true);
+            user.setOtp(null);
             userRepository.save(user);
 
         } else throw new
@@ -148,14 +147,13 @@ public class AuthService {
 
     }
 
-    public void resetPassword(ResetPasswordRequest resetPasswordRequest) throws ExistEmailException {
+    public void resetPassword(ResetPasswordRequest resetPasswordRequest) throws ExistEmailException, OtpTimeException {
         User user = userRepository.findByOtp(resetPasswordRequest.getOtp())
                 .orElseThrow(() -> new UserNotFoundException("Kod yanlışdır"));
-
         if (Duration.between(user.getOtpGeneratedTime()
                         , LocalDateTime.now()).
                 getSeconds() > 3 * 60) {
-            throw new UserNotFoundException("Otp kodun istifadə müddəti bitmişdir. " +
+            throw new OtpTimeException("Otp kodun istifadə müddəti bitmişdir. " +
                     "Zəhmət olmasa otp kodu yenidən əldə edin");
         }
 
@@ -163,6 +161,7 @@ public class AuthService {
             throw new ExistEmailException("Hər iki şifrə eyni olmalıdır");
         }
         user.setPassword(passwordEncoder.encode(resetPasswordRequest.getNewPassword()));
+        user.setOtp(null);
         userRepository.save(user);
 
     }
