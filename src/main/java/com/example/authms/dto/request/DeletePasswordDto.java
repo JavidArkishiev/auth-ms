@@ -12,6 +12,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 @ToString
 public class DeletePasswordDto {
     @NotBlank(message = "Şifrə boş ola bilməz")
-    @Size(min = 6, message = "Şifrə ən azı 6 simvoldan ibarət olmalıdır")
+    @Size(min = 8, message = "Şifrə ən azı 8 simvoldan ibarət olmalıdır")
     private String password;
 }

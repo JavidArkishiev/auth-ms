@@ -17,7 +17,7 @@ public class SignUpRequest {
     private String fullName;
 
     @NotBlank(message = "Şifrə boş ola bilməz")
-    @Size(min = 6, message = "Şifrə ən azı 6 simvoldan ibarət olmalıdır")
+    @Size(min = 8, message = "Şifrə ən azı 8 simvoldan ibarət olmalıdır")
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$",
             message = "Şifrədə ən az bir böyük latın hərfi,bir kiçik latın hərfi və rəqəm istifadə olunmalıdır")
     private String password;

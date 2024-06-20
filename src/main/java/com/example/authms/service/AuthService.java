@@ -72,7 +72,7 @@ public class AuthService {
         if (!user.isAccountNonLocked()) {
             if (unlock(user)) {
             } else {
-                throw new UserNotFoundException("Çox giriş cəhdi zəhmət olamasa biraz sonra yenidən cəhd edin");
+                throw new UserNotFoundException("Həddindən çox giriş cəhdi biraz sonra yenidən cəhd edin");
             }
         }
 
@@ -88,7 +88,7 @@ public class AuthService {
             increaseFailedAttempts(user);
             if (user.getFailedAttempt() >= 5) {
                 lock(user);
-                throw new UserNotFoundException("Çox giriş cəhdi zəhmət olamasa biraz sonra yenidən cəhd edin");
+                throw new UserNotFoundException("Həddindən çox giriş cəhdi biraz sonra yenidən cəhd edin");
             }
 
             throw new UserNotFoundException("E-mail və ya şifrə yanlışdır");
@@ -124,7 +124,7 @@ public class AuthService {
 
         } else throw new
                 UserNotFoundException("Otp kodun istifadə müddəti bitmişdir. " +
-                "Zəhmət olmasa yenidən otp kodu yenidən əldə edin");
+                "Zəhmət olmasa yenidən otp kodu əldə edin");
 
     }
 
