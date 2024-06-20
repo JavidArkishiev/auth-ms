@@ -71,7 +71,7 @@ public class UserService {
         return userMapper.mapToUserDto(user);
     }
 
-    public UserRequestDto updateUser(UserRequestDto userRequestDto) {
+    public void updateUser(UserRequestDto userRequestDto) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         User oldUser = userRepository.findByEmail(username)
@@ -80,8 +80,6 @@ public class UserService {
             User updateUser = userMapper.mapToUpdateUser(oldUser, userRequestDto);
             userRepository.save(updateUser);
         }
-        return userRequestDto;
-
     }
 
     public void deleteUser(DeletePasswordDto passwordDto) {
@@ -108,7 +106,7 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public UserResponseDto getUserByName(String email) {
+    public UserResponseDto getUserByEmail(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("İstifadəçi tapılmadı"));
         return userMapper.mapToUserDto(user);

@@ -34,24 +34,24 @@ public class AuthController {
     }
 
     @PostMapping("verify-account")
-    public ResponseEntity<String> verifyUser(@RequestBody @Valid OtpDto otp) {
+    public ResponseEntity<String> verifyUser(@RequestBody @Valid OtpDto otp) throws OtpTimeException {
         authService.verifyAccount(otp);
-        return ResponseEntity.ok("Success.Your account has activated." +
-                " You can login a website");
+        return ResponseEntity.ok("Hesabınız aktiv edildi." +
+                " Portala giriş edə bilərsiz");
 
     }
 
     @PostMapping("resend-otp")
     public ResponseEntity<String> resetOtp(@RequestParam String email) throws MessagingException {
         authService.regenerateOtp(email);
-        return ResponseEntity.ok("OTP code sent to email address");
+        return ResponseEntity.ok("Otp kodu email ünvanına göndərildi");
     }
 
     @PostMapping("forget-password")
     public ResponseEntity<String> forgetPassword(@RequestParam String email) throws MessagingException {
         authService.forgetPassword(email);
-        return ResponseEntity.ok("OTP code sent to email address." +
-                " You can reset password");
+        return ResponseEntity.ok("Otp kodu email ünvanına göndərildi." +
+                " Zəhmət olmasa kodu təsdiq edin");
     }
 
 
@@ -72,8 +72,8 @@ public class AuthController {
     public ResponseEntity<String> resetPassword(@RequestBody @Valid ResetPasswordRequest resetPasswordRequest,
                                                 @PathVariable String uuid) throws ExistEmailException, OtpTimeException {
         authService.resetPassword(resetPasswordRequest, uuid);
-        return ResponseEntity.ok("Password has been reset successfully." +
-                " You can login a website with new password");
+        return ResponseEntity.ok("Şifrəniz uğurla yeniləndi." +
+                " Yeni şifrə ilə portala daxil olun");
     }
 
 }

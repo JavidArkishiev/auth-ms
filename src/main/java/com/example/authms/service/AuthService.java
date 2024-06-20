@@ -25,7 +25,6 @@ import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -36,7 +35,7 @@ public class AuthService {
     private final JWTService jwtService;
     private final EmailService emailService;
     private final PasswordEncoder passwordEncoder;
-    private final Queue<User> signUpQueue = new LinkedList<>();
+    private final Queue<User> addQueue = new LinkedList<>();
     private static final SecureRandom secureRandom = new SecureRandom();
     private static final Base64.Encoder base64Encoder = Base64.getUrlEncoder();
 
@@ -52,14 +51,14 @@ public class AuthService {
 
         User userEntity = userMapper.mapToEntity(signUpRequest);
         userRepository.save(userEntity);
-        signUpQueue.add(userEntity);
+        addQueue.add(userEntity);
 
     }
 
     @Scheduled(fixedRate = 2000)
     public void processSignUpQueue() throws MessagingException {
         User userEntity;
-        while ((userEntity = signUpQueue.poll()) != null) {
+        while ((userEntity = addQueue.poll()) != null) {
             sendVerificationEmail(userEntity.getEmail(), userEntity.getOtp());
         }
     }
@@ -115,10 +114,10 @@ public class AuthService {
         emailService.sendEmail(email, subject, body);
     }
 
-    public void verifyAccount(OtpDto otpDto) {
+    public void verifyAccount(OtpDto otpDto) throws OtpTimeException {
 
         User user = userRepository.findByOtp(otpDto.getOtp())
-                .orElseThrow(() -> new UserNotFoundException("Kod yanlışdır"));
+                .orElseThrow(() -> new OtpTimeException("Kod yanlışdır"));
 
         if (Duration.between(user.getOtpGeneratedTime()
                         , LocalDateTime.now()).
@@ -209,7 +208,7 @@ public class AuthService {
 
     public UuidResponse verifyOtp(OtpDto dto) throws UserNotFoundException, OtpTimeException {
         User user = userRepository.findByOtp(dto.getOtp())
-                .orElseThrow(() -> new UserNotFoundException("Kod yanlışdır"));
+                .orElseThrow(() -> new OtpTimeException("Kod yanlışdır"));
 
         if (Duration.between(user.getOtpGeneratedTime(),
                 LocalDateTime.now()).getSeconds() > 3 * 60) {

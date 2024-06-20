@@ -36,18 +36,19 @@ public class UserController {
         return userService.getUser();
     }
 
-    @GetMapping("by-name")
+    @GetMapping("by-email")
     @PreAuthorize("hasAuthority('ADMIN')")
     @ResponseStatus(HttpStatus.OK)
-    public UserResponseDto getUserByName(@RequestParam String email) {
-        return userService.getUserByName(email);
+    public UserResponseDto getUserByEmail(@RequestParam String email) {
+        return userService.getUserByEmail(email);
     }
 
     @PutMapping()
     @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
     @ResponseStatus(HttpStatus.OK)
-    public UserRequestDto updateUser(@RequestBody UserRequestDto userRequestDto) {
-        return userService.updateUser(userRequestDto);
+    public String updateUser(@RequestBody UserRequestDto userRequestDto) {
+        userService.updateUser(userRequestDto);
+        return "İstifadəçi məlumatlarınız yeniləndi";
 
     }
 
@@ -56,7 +57,7 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     public String deleteUser(@Valid @RequestBody DeletePasswordDto passwordDto) {
         userService.deleteUser(passwordDto);
-        return "Hesabınız uğurla silindi";
+        return "Hesabınız silindi";
     }
 
     @PutMapping("change-password")
@@ -64,7 +65,7 @@ public class UserController {
     public ResponseEntity<String> changePassword(@RequestBody @Valid ChangePasswordRequest request,
                                                  Principal principal) {
         userService.changePassword(principal, request);
-        return ResponseEntity.ok("Success");
+        return ResponseEntity.ok("Şifrəniz müvəffəqiyyətlə dəyişdirildi");
 
     }
 }
