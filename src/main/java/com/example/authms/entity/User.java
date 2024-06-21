@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.cglib.core.Local;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -40,7 +41,10 @@ public class User implements UserDetails {
     @Column(name = "uuid", unique = true)
     private String UUID;
 
-    @Column(name = "otp_generated_time", nullable = false)
+    @Column(name = "uuid_generated_time")
+    private LocalDateTime uuidGeneratedTimme;
+
+    @Column(name = "otp_generated_time")
     private LocalDateTime otpGeneratedTime = LocalDateTime.now();
 
     @Column(name = "creation_date", nullable = false)

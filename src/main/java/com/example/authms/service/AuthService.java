@@ -129,6 +129,7 @@ public class AuthService {
         }
         user.setEnabled(true);
         user.setOtp(null);
+        user.setOtpGeneratedTime(null);
         userRepository.save(user);
     }
 
@@ -217,7 +218,9 @@ public class AuthService {
 
         String uuid = generateLongRandomString();
         user.setUUID(uuid);
+        user.setUuidGeneratedTimme(LocalDateTime.now());
         user.setOtp(null);
+        user.setOtpGeneratedTime(null);
         userRepository.save(user);
         return UuidResponse.builder()
                 .uuid(uuid).build();
@@ -233,12 +236,17 @@ public class AuthService {
     public void resetPassword(ResetPasswordRequest resetPasswordRequest, String uuid) throws ExistEmailException, OtpTimeException {
         User user = userRepository.findByUUID(uuid)
                 .orElseThrow(() -> new UserNotFoundException("Uuid yanlışdır"));
+        if (Duration.between(user.getUuidGeneratedTimme(),
+                LocalDateTime.now()).getSeconds() > 3 * 60) {
+            throw new OtpTimeException("Uuid istifadə müddəti bitmişdir");
+        }
 
         if (!resetPasswordRequest.getNewPassword().matches(resetPasswordRequest.getConfirmNewPassword())) {
             throw new ExistEmailException("Hər iki şifrə eyni olmalıdır");
         }
         user.setPassword(passwordEncoder.encode(resetPasswordRequest.getNewPassword()));
         user.setUUID(null);
+        user.setUuidGeneratedTimme(null);
         userRepository.save(user);
 
     }

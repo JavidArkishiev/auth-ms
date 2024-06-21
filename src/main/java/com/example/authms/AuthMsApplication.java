@@ -49,7 +49,7 @@ public class AuthMsApplication implements CommandLineRunner {
             user.setEnabled(true);
             user.setOtp(null);
             user.setUUID(null);
-            user.setOtpGeneratedTime(LocalDateTime.now());
+            user.setOtpGeneratedTime(null);
             user.setPassword(passwordEncoder.encode("davidD123"));
             user.setRoles(mapRole());
 
