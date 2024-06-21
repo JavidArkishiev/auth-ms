@@ -111,4 +111,5 @@ public class UserService {
                 .orElseThrow(() -> new UserNotFoundException("İstifadəçi tapılmadı"));
         return userMapper.mapToUserDto(user);
     }
+//
 }
