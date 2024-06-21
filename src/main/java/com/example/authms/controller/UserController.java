@@ -55,8 +55,8 @@ public class UserController {
     @DeleteMapping()
     @PreAuthorize("hasAuthority('USER')")
     @ResponseStatus(HttpStatus.OK)
-    public String deleteUser(@Valid @RequestBody DeletePasswordDto passwordDto) {
-        userService.deleteUser(passwordDto);
+    public String deleteUser(@Valid @RequestBody DeletePasswordDto passwordDto,Principal principal) {
+        userService.deleteUser(passwordDto,principal);
         return "Hesabınız silindi";
     }
 

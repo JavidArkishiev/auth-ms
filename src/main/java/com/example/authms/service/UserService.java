@@ -82,9 +82,8 @@ public class UserService {
         }
     }
 
-    public void deleteUser(DeletePasswordDto passwordDto) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
+    public void deleteUser(DeletePasswordDto passwordDto, Principal principal) {
+        String username = principal.getName();
         User userEntity = userRepository.findByEmail(username)
                 .orElseThrow(() -> new UserNotFoundException("İstifadəçi tapılmadı"));
         if (!passwordEncoder.matches(passwordDto.getPassword(), userEntity.getPassword())) {
