@@ -114,10 +114,13 @@ public class AuthService {
         emailService.sendEmail(email, subject, body);
     }
 
-    public void verifyAccount(OtpDto otpDto) throws OtpTimeException {
+    public void verifyAccount(OtpDto otpDto) throws OtpTimeException, ExistEmailException {
 
         User user = userRepository.findByOtp(otpDto.getOtp())
                 .orElseThrow(() -> new OtpTimeException("Kod yanlışdır"));
+        if (user.isEnabled()) {
+            throw new ExistEmailException("Bu hesab aktivdir");
+        }
 
         if (Duration.between(user.getOtpGeneratedTime()
                         , LocalDateTime.now()).
@@ -215,9 +218,9 @@ public class AuthService {
             throw new OtpTimeException("Otp kodun istifadə müddəti bitmişdir. Zəhmət olmasa otp kodu yenidən əldə edin");
         }
 
-
         String uuid = generateLongRandomString();
         user.setUUID(uuid);
+        user.setOtp(null);
         userRepository.save(user);
         return UuidResponse.builder()
                 .uuid(uuid).build();
@@ -238,7 +241,6 @@ public class AuthService {
             throw new ExistEmailException("Hər iki şifrə eyni olmalıdır");
         }
         user.setPassword(passwordEncoder.encode(resetPasswordRequest.getNewPassword()));
-        user.setOtp(null);
         user.setUUID(null);
         userRepository.save(user);
 

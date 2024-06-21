@@ -34,7 +34,7 @@ public class AuthController {
     }
 
     @PostMapping("verify-account")
-    public ResponseEntity<String> verifyUser(@RequestBody @Valid OtpDto otp) throws OtpTimeException {
+    public ResponseEntity<String> verifyUser(@RequestBody @Valid OtpDto otp) throws OtpTimeException, ExistEmailException {
         authService.verifyAccount(otp);
         return ResponseEntity.ok("Hesabınız aktiv edildi." +
                 " Portala giriş edə bilərsiz");
