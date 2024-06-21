@@ -96,7 +96,6 @@ public class AuthService {
                 lock(user);
                 throw new UserNotFoundException("Həddindən çox giriş cəhdi biraz sonra yenidən cəhd edin");
             }
-
             throw new UserNotFoundException("E-mail və ya şifrə yanlışdır");
         }
     }
@@ -124,15 +123,13 @@ public class AuthService {
 
         if (Duration.between(user.getOtpGeneratedTime()
                         , LocalDateTime.now()).
-                getSeconds() < 3 * 60) {
-            user.setEnabled(true);
-            user.setOtp(null);
-            userRepository.save(user);
-
-        } else throw new
-                UserNotFoundException("Otp kodun istifadə müddəti bitmişdir. " +
-                "Zəhmət olmasa yenidən otp kodu əldə edin");
-
+                getSeconds() > 3 * 60) {
+            throw new UserNotFoundException("Otp kodun istifadə müddəti bitmişdir. " +
+                    "Zəhmət olmasa yenidən otp kodu əldə edin");
+        }
+        user.setEnabled(true);
+        user.setOtp(null);
+        userRepository.save(user);
     }
 
     public void regenerateOtp(String email) throws MessagingException {
