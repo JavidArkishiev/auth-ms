@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @ControllerAdvice
 public class ExceptionHandle {
@@ -14,7 +15,7 @@ public class ExceptionHandle {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorDetails> handleValidationException(MethodArgumentNotValidException e) {
         ErrorDetails errorDetails = new ErrorDetails();
-        errorDetails.setMessage(e.getBindingResult().getFieldError().getDefaultMessage());
+        errorDetails.setMessage(Objects.requireNonNull(e.getBindingResult().getFieldError()).getDefaultMessage());
         errorDetails.setStatusCode(HttpStatus.BAD_REQUEST.value());
         errorDetails.setTimeStamp(LocalDateTime.now());
         return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
